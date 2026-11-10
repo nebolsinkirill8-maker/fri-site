@@ -194,6 +194,9 @@ function animateDetail(element, frames, options = {}) {
     duration: 700, easing: "cubic-bezier(.16,.8,.23,1)", ...options,
   });
   pageAnimations.add(animation);
+  // A background tab or interrupted animation must never hide real content.
+  const cleanup = setTimeout(() => animation.cancel(), Number(options.duration || 700) + Number(options.delay || 0) + 600);
+  animation.finished.catch(() => {}).finally(() => clearTimeout(cleanup));
   animation.finished.catch(() => {}).finally(() => pageAnimations.delete(animation));
 }
 const revealTargets = document.querySelectorAll(
@@ -206,7 +209,7 @@ if ('IntersectionObserver' in window) {
   const revealObserver = new IntersectionObserver((entries) => {
     for (const { target, isIntersecting } of entries) {
       if (!isIntersecting) continue;
-      animateDetail(target, [{ opacity: 0, translate: '0 28px' }, { opacity: 1, translate: '0 0' }], {
+      animateDetail(target, [{ opacity: .85, translate: '0 20px' }, { opacity: 1, translate: '0 0' }], {
         delay: Number(target.dataset.revealDelay || 0), fill: 'backwards',
       });
       revealObserver.unobserve(target);
@@ -217,14 +220,6 @@ if ('IntersectionObserver' in window) {
     entries.forEach(({ target, isIntersecting }) => {
       if (!isIntersecting) return;
       target.classList.add('is-in-view');
-      if (target.id === 'tournament') {
-        const path = target.querySelector('.route-line path');
-        const length = path.getTotalLength();
-        animateDetail(path, [
-          { strokeDasharray: `${length}`, strokeDashoffset: length },
-          { strokeDasharray: `${length}`, strokeDashoffset: 0 },
-        ], { duration: 1200 });
-      }
       sceneObserver.unobserve(target);
     });
   }, { threshold: .15 });
@@ -264,7 +259,7 @@ function firePrize() {
   prizeValue.querySelectorAll('.prize-glyph').forEach((glyph, index) => {
     const lean = (index % 2 ? 1 : -1) * 18;
     animateDetail(glyph, [
-      { opacity: 0, transform: `translateY(80px) scale(.08) rotate(${lean}deg)`, offset: 0 },
+      { opacity: .75, transform: `translateY(45px) scale(.8) rotate(${lean}deg)`, offset: 0 },
       { opacity: 1, transform: `translateY(-20px) scale(1.28) rotate(${-lean / 4}deg)`, offset: .58 },
       { opacity: 1, transform: 'translateY(5px) scale(.96) rotate(1deg)', offset: .8 },
       { opacity: 1, transform: 'translateY(0) scale(1) rotate(0deg)', offset: 1 },
@@ -433,3 +428,18 @@ document.addEventListener('keydown', (event) => {
   if (event.code !== 'KeyM' || event.ctrlKey || event.metaKey || event.altKey || event.target.closest('input, textarea, select, [contenteditable]')) return;
   muteTrack();
 });
+
+const readingProgress = document.createElement('div');
+readingProgress.className = 'reading-progress';
+readingProgress.setAttribute('aria-hidden', 'true');
+document.body.append(readingProgress);
+let progressQueued = false;
+function updateReadingProgress() {
+  progressQueued = false;
+  const max = document.documentElement.scrollHeight - innerHeight;
+  readingProgress.style.transform = 'scaleX(' + (max > 0 ? Math.min(1, Math.max(0, scrollY / max)) : 0) + ')';
+}
+addEventListener('scroll', () => { if (!progressQueued) { progressQueued = true; requestAnimationFrame(updateReadingProgress); } }, { passive: true });
+addEventListener('resize', updateReadingProgress);
+updateReadingProgress();
+
