@@ -421,7 +421,7 @@ h1 span + span { margin-top: .1em; }
   padding-block: clamp(100px, 11vw, 163px) clamp(84px, 9vw, 140px);
   background:
     linear-gradient(#160910 0%, #390d22e3 50%, #160910 99%),
-    url("assets/hero.webp") center / 100% auto no-repeat;
+    url("assets/hero.webp") center / 100% 100% no-repeat;
   background-color: #160910;
 }
 .organizers .section-head p { color: #f3bac9; }
