@@ -249,11 +249,11 @@ h1 span + span { margin-top: .1em; }
   color: var(--ivory);
 }
 @keyframes ink-copy {
-  from { opacity: 0; transform: translate(-15px, 12px); }
+  from { opacity: 1; transform: translate(-15px, 12px); }
   to { opacity: 1; transform: none; }
 }
 @keyframes ink-figure {
-  from { opacity: 0; transform: translate(22px, 22px) scale(.97); }
+  from { opacity: 1; transform: translate(22px, 22px) scale(.97); }
   to { opacity: 1; transform: none; }
 }
 
@@ -788,7 +788,7 @@ nav a:hover::after, nav a:focus-visible::after { transform: scaleX(1); }
 .prize-burst-rays { position: absolute; z-index: -1; inset: 0; pointer-events: none; overflow: hidden; }
 .prize-burst-rays i { position: absolute; left: 50%; top: 50%; width: clamp(70px, 18vw, 280px); height: 3px; background: var(--wine); transform-origin: left; opacity: 0; }
 @media (prefers-reduced-motion: no-preference) {
-  .prize.prize-ready:not(.prize-fired) #prize-value { visibility: hidden; }
+  .prize.prize-ready:not(.prize-fired) #prize-value { visibility: visible; }
   .prize.prize-ready:not(.prize-fired)::after { opacity: 0; }
   .prize.prize-fired::after { animation: prize-explosion 720ms cubic-bezier(.12,.72,.22,1) both; }
 }
@@ -866,3 +866,22 @@ nav a:hover::after, nav a:focus-visible::after { transform: scaleX(1); }
   .prize.prize-fired::after { animation: light-burst 1000ms cubic-bezier(.1,.7,.2,1) both; }
   .prize.prize-fired::before { animation: pressure-wave 950ms cubic-bezier(.12,.6,.2,1) both; }
 }
+
+/* Contain decorative overflow without clipping the star between sections. */
+html { overflow-x: clip; }
+body { overflow-x: clip; max-width: 100%; }
+@supports not (overflow: clip) { html, body { overflow-x: hidden; } }
+.route-line { width: 100vw; max-width: none; overflow: hidden; stroke-linecap: round; }
+.route-line path:first-child { display: none; }
+.route-line path + path { stroke-width: 2; }
+.prize-currency { right: clamp(14px, 1.8vw, 28px); padding: 4px 7px; background: #ffc0d1df; color: #30101d; border-radius: 2px; font-size: clamp(10px, .85vw, 12px); }
+.reading-progress { position: fixed; z-index: 30; top: 0; left: 0; width: 100%; height: 3px; background: var(--punch); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+.stages li::after { transition: background-color 250ms ease, transform 250ms ease; }
+.stages li:hover::after { background: var(--punch); transform: translate(8px, 10px); }
+.primary { transition: transform 200ms ease, filter 200ms ease; }
+@media (hover:hover) and (prefers-reduced-motion:no-preference) {
+  .primary:hover { transform: translateY(-3px); filter: drop-shadow(0 8px 10px #16091035); }
+  .primary:hover svg { transform: translateX(7px) rotate(-8deg); }
+}
+@media (prefers-reduced-motion:reduce) { .reading-progress { display:none; } }
+
