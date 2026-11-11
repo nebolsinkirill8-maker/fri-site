@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Поддержка | FRI{% endblock %}
+{% block content %}
+<section class="account-shell wrap">
+  <h1>Поддержка</h1>
+  <p>Задай вопрос организаторам. Ответ появится здесь, в твоём обращении.</p>
+  <section class="info-card" aria-labelledby="new-ticket-title">
+    <h2 id="new-ticket-title">Новое обращение</h2>
+    <p>Не отправляй пароль или коды доступа.</p>
+    <form class="account-form" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="primary" type="submit">Отправить обращение</button>
+    </form>
+  </section>
+  <section aria-labelledby="ticket-list-title">
+    <h2 id="ticket-list-title">Мои обращения</h2>
+    {% for ticket in tickets %}
+      <div class="info-card support-message">
+        <h3><a href="{% url 'support:detail' ticket.pk %}">#{{ ticket.pk }} {{ ticket.subject }}</a></h3>
+        <p>{{ ticket.get_status_display }} · {{ ticket.updated_at|date:"d.m.Y H:i" }}</p>
+      </div>
+    {% empty %}<p>Обращений пока нет.</p>{% endfor %}
+    {% if tickets.has_other_pages %}
+      <nav aria-label="Страницы обращений">
+        {% if tickets.has_previous %}<a href="?page={{ tickets.previous_page_number }}">Назад</a>{% endif %}
+        <span>{{ tickets.number }} из {{ tickets.paginator.num_pages }}</span>
+        {% if tickets.has_next %}<a href="?page={{ tickets.next_page_number }}">Дальше</a>{% endif %}
+      </nav>
+    {% endif %}
+  </section>
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="choice-hero wrap">
+  <div class="choice-copy"><p class="eyebrow">FIRST RUSSIAN INTERNATIONAL</p><h1>Прояви<br>себя<span class="accent">.</span></h1><p class="choice-intro">Командный турнир и ZXC 1 vs 1</p><p class="quiet">Два направления FRI по Dota 2. Участие бесплатное.</p><p class="quiet">{% if tournament_settings.applications_open %}Приём заявок на командный тур открыт.{% else %}Приём заявок на командный тур ещё не открыт.{% endif %}</p>
+    <div class="competition-choices"><a class="primary" href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'register' %}{% endif %}">{% if user.is_authenticated %}Личный кабинет{% else %}Зарегистрироваться{% endif %} ↗</a><a href="{% url 'tournament' %}#participation">Условия участия ↗</a></div>
+    <p class="choice-zxc"><a href="{% url 'zxc' %}">ZXC 1 vs 1 ↗</a> <span class="quiet">· Дуэли в Dota 2</span></p>
+  </div>
+  <div class="choice-art" aria-hidden="true"></div>
+</section>
+{% endblock %}

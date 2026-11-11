@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Обращение #{{ ticket.pk }} | FRI{% endblock %}
+{% block content %}
+<section class="account-shell wrap">
+  <p><a href="{% url 'support:index' %}">Все обращения</a></p>
+  <h1 class="support-message">{{ ticket.subject }}</h1>
+  <p>Обращение #{{ ticket.pk }} · {{ ticket.get_status_display }}</p>
+  {% for message in thread %}
+    <article class="info-card support-message">
+      <h2>{% if message.from_staff %}Поддержка FRI{% else %}Ты{% endif %}</h2>
+      <p class="quiet">{{ message.created_at|date:"d.m.Y H:i" }}</p>
+      {{ message.body|linebreaks }}
+    </article>
+  {% endfor %}
+  {% if ticket.status == 'open' %}
+    <form class="account-form" method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="primary" type="submit">Отправить сообщение</button>
+    </form>
+  {% else %}
+    {{ form.non_field_errors }}
+    <p>Это обращение закрыто. Если остались вопросы, <a href="{% url 'support:index' %}">создай новое</a>.</p>
+  {% endif %}
+</section>
+{% endblock %}

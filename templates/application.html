@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Заявка: {{ competition_label }} | FRI{% endblock %}
+{% block content %}
+<section class="account-shell wrap">
+  <p class="eyebrow">FRI / {{ competition_label }}</p>
+  <h1>Заявка на турнир</h1>
+  {% include 'registration_dates.html' %}
+  {% if application %}
+    <div class="info-card">
+      <p class="account-status" data-status="{{ application.status }}">{{ application.get_status_display }}</p>
+      <h2>Заявка №{{ application.pk }}</h2>
+      <p>Подана {{ application.created_at|date:"d.m.Y в H:i" }} (МСК)</p>
+      {% if application.status == 'pending' %}<p>Организаторы ещё не приняли решение.</p>{% elif application.status == 'accepted' %}<p>Организаторы приняли твою заявку.</p>{% elif application.status == 'rejected' %}<p>Организаторы отклонили заявку.</p>{% endif %}
+      {% if application.decision_comment %}<h3>Комментарий организатора</h3><p class="account-message">{{ application.decision_comment }}</p>{% endif %}
+    </div>
+    <p class="quiet">Если нужно уточнить решение или исправить данные, напиши в <a href="{% url 'support:index' %}">поддержку</a>.</p>
+  {% elif can_apply %}
+    <p>Перед отправкой проверь игровой профиль. Организаторы получат копию данных на момент подачи. Участие бесплатное.</p>
+    <div class="info-card"><h2>{{ user.nickname }}</h2><p><a href="{{ user.steam_url }}" target="_blank" rel="noopener noreferrer">Профиль Steam ↗</a></p><p><a href="{% url 'profile_edit' %}">Проверить и изменить данные</a></p></div>
+    <form class="account-form" method="post">{% csrf_token %}{{ form.as_p }}<button class="primary" type="submit">Подать заявку ↗</button></form>
+  {% elif not applications_open %}
+    <div class="info-card"><h2>Приём заявок закрыт</h2><p>Следи за анонсами в <a href="{{ tournament_settings.telegram_url }}">Telegram FRI</a>.</p></div>
+  {% elif not profile_ready %}
+    <div class="info-card"><h2>Заполни профиль</h2><p>Для заявки нужны никнейм, ссылка на Steam, Discord и Telegram.</p></div><a class="primary" href="{% url 'profile_edit' %}">Заполнить профиль ↗</a>
+  {% endif %}
+  <p><a href="{% url 'profile' %}">Назад в профиль</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация — FRI{% endblock %}
+{% block content %}
+<section class="registration-layout" aria-labelledby="registration-title">
+  <div class="registration-main"><p class="eyebrow">FRI / ШАГ 01</p><h1 id="registration-title">Создать аккаунт</h1><p>Почта и пароль нужны для входа. Игровой профиль можно заполнить позже. Аккаунт не заменяет заявку на турнир.</p><form class="account-form" method="post">{% csrf_token %}{{ form.as_p }}<button class="primary" type="submit">Создать аккаунт ↗</button></form><p>Уже есть аккаунт? <a href="{% url 'login' %}">Войти</a></p><p class="quiet"><a href="{% url 'tournament' %}#participation">Условия участия без регистрации ↗</a></p></div>
+</section>
+{% endblock %}

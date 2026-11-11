@@ -1,0 +1,109 @@
+.zxc-page {
+  --zxc-black:#0b090a;
+  --zxc-bone:#f0e7e2;
+  --zxc-red:#f27886;
+  --zxc-rule:#77515a88;
+  background:var(--zxc-black);
+  color:var(--zxc-bone);
+}
+.zxc-page .app-header,.zxc-page .app-footer { border-color:var(--zxc-rule); }
+.zxc-page :focus-visible { outline-color:var(--zxc-red); }
+.zxc-hero {
+  isolation:isolate;
+  position:relative;
+  display:grid;
+  align-items:center;
+  min-height:clamp(550px,50vw,800px);
+  background:#130d0f;
+}
+.zxc-art,.zxc-hero::after { position:absolute; inset:0; width:100%; height:100%; }
+.zxc-art { z-index:-2; object-fit:cover; object-position:center 40%; }
+.zxc-hero::after {
+  content:"";
+  z-index:-1;
+  background:linear-gradient(90deg,#0b090a 0%,#0b090ae0 19%,#0b090a33 55%,transparent 74%),linear-gradient(0deg,#0b090a 0%,transparent 27%);
+  pointer-events:none;
+}
+.zxc-hero-inner { padding-block:56px 88px; }
+.zxc-kicker {
+  color:var(--zxc-red);
+  font:700 .75rem/1.4 var(--sans);
+  letter-spacing:.22em;
+  margin:0 0 16px;
+}
+.zxc-kicker span { margin-inline:.4em; }
+.zxc-hero h1 {
+  font:700 clamp(6rem,14vw,15rem)/.75 "Old English Text MT",Georgia,serif;
+  letter-spacing:-.07em;
+  color:var(--zxc-bone);
+  text-shadow:3px 4px #681c2f,0 3px 20px #090708;
+  margin:0;
+}
+.zxc-hero h1 span {
+  display:block;
+  margin-top:28px;
+  font:800 clamp(1.4rem,3.6vw,3.1rem)/1 var(--sans);
+  letter-spacing:.22em;
+  color:var(--zxc-red);
+  text-shadow:none;
+}
+.zxc-tagline { margin-top:24px; font:700 clamp(1.7rem,3vw,2.65rem)/1.15 Georgia,serif; }
+.zxc-intro { margin-top:9px; color:#d4c5c6; }
+.zxc-actions { display:flex; gap:18px 24px; align-items:center; flex-wrap:wrap; margin-top:28px; }
+.zxc-button {
+  display:inline-flex;
+  gap:14px;
+  align-items:center;
+  justify-content:center;
+  padding:12px 18px;
+  min-height:48px;
+  font-weight:750;
+  text-decoration:none;
+  border:1px solid #c4475c;
+  background:#871b30;
+  color:#fff6f4;
+}
+.zxc-button:hover { background:#a1273c; }
+.zxc-secondary { display:inline-flex; align-items:center; gap:8px; min-height:44px; text-underline-offset:.32em; }
+.zxc-index {
+  position:absolute;
+  inset:auto 0 16px;
+  display:flex;
+  justify-content:space-between;
+  border-top:1px solid var(--zxc-rule);
+  padding-top:9px;
+  font:600 .7rem/1.5 var(--sans);
+  letter-spacing:.2em;
+  color:#c6a9ad;
+}
+.zxc-info { background:#120d10; border-block:1px solid var(--zxc-rule); }
+.zxc-info-inner { display:grid; grid-template-columns:auto minmax(0,1fr) auto; align-items:center; gap:24px 40px; padding-block:clamp(40px,6vw,82px); }
+.zxc-sigil { color:var(--zxc-red); }
+.zxc-info h2 { font:700 clamp(1.65rem,3vw,2.9rem)/1.05 Georgia,serif; margin:0 0 12px; }
+.zxc-info p:not(.zxc-kicker) { max-width:56ch; color:#d4c5c6; }
+.zxc-info p a { color:var(--zxc-bone); }
+.zxc-details { display:grid; grid-template-columns:1fr 1fr; gap:clamp(32px,7vw,100px); padding-block:clamp(46px,7vw,100px); }
+.zxc-details h2 { font:700 clamp(2rem,4vw,4rem)/1.04 Georgia,serif; margin:0 0 24px; }
+.zxc-rule-copy { max-width:50ch; color:#d4c5c6; margin-bottom:16px; }
+.zxc-prizes { border-left:1px solid var(--zxc-rule); padding-left:clamp(24px,4vw,60px); }
+.zxc-prizes ol { list-style:none; padding:0; margin:0; }
+.zxc-prizes li { padding-block:18px; border-bottom:1px solid var(--zxc-rule); }
+.zxc-prizes li strong { display:block; color:var(--zxc-red); margin-bottom:5px; }
+.zxc-prize-copy { white-space:pre-line; line-height:1.9; }
+
+@media(max-width:680px) {
+  .zxc-details { grid-template-columns:1fr; }
+  .zxc-prizes { border-left:0; padding-left:0; border-top:1px solid var(--zxc-rule); padding-top:32px; }
+  .zxc-hero { min-height:0; }
+  .zxc-art,.zxc-hero::after { height:clamp(335px,98vw,480px); }
+  .zxc-art { object-position:78% 32%; }
+  .zxc-hero::after { background:linear-gradient(0deg,#130d0f 1%,#130d0f88 33%,transparent 65%); }
+  .zxc-hero-inner { padding-top:clamp(230px,70vw,350px); padding-bottom:73px; }
+  .zxc-hero h1 { font-size:clamp(5.8rem,22vw,9rem); }
+  .zxc-hero h1 span { margin-top:20px; }
+  .zxc-tagline { margin-top:20px; }
+  .zxc-actions { gap:10px 16px; }
+  .zxc-info-inner { grid-template-columns:auto minmax(0,1fr); gap:15px; }
+  .zxc-sigil { width:37px; height:auto; }
+  .zxc-back { grid-column:2; }
+}

@@ -519,6 +519,12 @@ figcaption span { color: var(--rose-ink); font-size: clamp(.72rem, 1.2vw, .97rem
   opacity: .38;
 }
 .is-carousel figure:not([data-position="center"]) figcaption { opacity: 0; }
+.is-carousel figure[data-position="hidden"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: scale(.65);
+}
 .carousel-controls button {
   position: absolute;
   z-index: 4;

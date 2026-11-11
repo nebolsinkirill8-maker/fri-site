@@ -1,0 +1,22 @@
+[
+{
+  "model": "portal.tournamentsettings",
+  "pk": 1,
+  "fields": {
+    "applications_open": false,
+    "zxc_applications_open": false,
+    "registration_starts_on": "2026-11-13",
+    "registration_ends_on": "2026-11-27",
+    "bracket_ready_on": "2026-12-04",
+    "zxc_prizes": "1 место: аркана на Shadow Fiend\n2 место: дезоляторы на Shadow Fiend\n3–5 места: Dota Plus на месяц",
+    "zxc_format": "Играем 1 на 1 на Shadow Fiend. Победа: снос вышки соперника или два убийства соперника. Последние 8 матчей пройдут на трансляции.",
+    "prize": "",
+    "group_format": "Предварительно: 32 команды. Верхняя и нижняя сетки, серии BO1.",
+    "playoff_format": "16 команд. Верхняя и нижняя сетки, серии BO3.",
+    "main_event": "Командный тур — основное событие FRI. Финальный этап: 8 команд, верхняя и нижняя сетки. Серии BO3, решающий матч BO5.",
+    "twitch_channel": "ceo111kimikiru",
+    "telegram_url": "https://t.me/firstrussianinternational",
+    "discord_url": "https://discord.gg/qtRGBJMWg8"
+  }
+}
+]

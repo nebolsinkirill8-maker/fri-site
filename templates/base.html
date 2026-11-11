@@ -1,0 +1,32 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="{% block theme_color %}#160910{% endblock %}">
+  <title>{% block title %}First Russian International{% endblock %}</title>
+  <link rel="icon" href="{% static 'assets/mark.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'app.css' %}">
+  {% block page_head %}{% endblock %}
+</head>
+<body class="app-page{% block page_class %}{% endblock %}">
+  <a class="skip" href="#main">К содержанию</a>
+  <header class="app-header wrap">
+    <a class="app-brand" href="{% url 'home' %}" aria-label="FRI — главная">FRI ✦</a>
+    <nav aria-label="Основная навигация">
+      <a href="{% url 'tournament' %}">Турнир</a>
+      <a href="{% url 'support:index' %}">Поддержка</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'profile' %}">Мой профиль</a>
+        <form action="{% url 'logout' %}" method="post">{% csrf_token %}<button type="submit">Выйти</button></form>
+      {% else %}<a href="{% url 'login' %}">Войти</a>{% endif %}
+    </nav>
+  </header>
+  <main id="main">
+    {% if messages %}<ul class="account-notices wrap" role="status">{% for message in messages %}<li>{{ message }}</li>{% endfor %}</ul>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="app-footer wrap"><span>First Russian International</span><a href="{{ tournament_settings.telegram_url }}">Telegram</a><a href="{{ tournament_settings.discord_url }}">Discord</a></footer>
+</body>
+</html>

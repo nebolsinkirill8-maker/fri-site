@@ -1,0 +1,5 @@
+{% extends 'base.html' %}
+{% block title %}Игровой профиль — FRI{% endblock %}
+{% block content %}
+<section class="account-shell wrap"><p class="eyebrow">FRI / ШАГ 02</p><h1>Расскажи о себе</h1><p>Аккаунт уже создан. Все поля необязательные — можешь заполнить их сейчас или вернуться позднее.</p><form class="account-form" method="post">{% csrf_token %}{{ form.as_p }}<button class="primary" type="submit">Сохранить профиль ↗</button></form><p><a href="{% url 'profile' %}">Заполнить позднее / к профилю</a></p><p class="quiet">Это не заявка на участие. Данные доступны тебе и организаторам.</p></section>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}ZXC 1 vs 1 | FRI{% endblock %}
+{% block theme_color %}#0b090a{% endblock %}
+{% block page_class %} zxc-page{% endblock %}
+{% block page_head %}
+  <meta name="description" content="ZXC от FRI. Дуэли 1 на 1 в Dota 2.">
+  <link rel="stylesheet" href="{% static 'zxc.css' %}">
+{% endblock %}
+{% block content %}
+<section class="zxc-hero" aria-labelledby="zxc-title">
+  <img class="zxc-art" src="{% static 'assets/zxc-lilies.jpg' %}" width="1672" height="941" alt="" fetchpriority="high">
+  <div class="zxc-hero-inner wrap">
+    <p class="zxc-kicker">FRI <span aria-hidden="true">/</span> DOTA 2 DUELS</p>
+    <h1 id="zxc-title">ZXC <span>1 VS 1</span></h1>
+    <p class="zxc-tagline">Никто не прикроет.</p>
+    <p class="zxc-intro">Дуэли один на один в Dota 2. Только Shadow Fiend.</p>
+    <div class="zxc-actions">
+      <a class="zxc-button" href="{% if user.is_authenticated %}{% url 'zxc_application' %}{% else %}{% url 'register' %}{% endif %}">{% if user.is_authenticated %}Заявка на ZXC{% else %}Зарегистрироваться{% endif %} <span aria-hidden="true">↗</span></a>
+      <a class="zxc-secondary" href="#zxc-info">О дуэлях <span aria-hidden="true">↓</span></a>
+    </div>
+  </div>
+  <div class="zxc-index wrap" aria-hidden="true"><span>FRI / ZXC</span><span>01 × 01</span></div>
+</section>
+<section class="zxc-info" id="zxc-info" aria-labelledby="zxc-info-title">
+  <div class="zxc-info-inner wrap">
+    <svg class="zxc-sigil" width="64" height="98" viewBox="0 0 64 98" fill="none" aria-hidden="true" focusable="false">
+      <path d="M32 2 37 37 62 49 37 61 32 96 27 61 2 49 27 37Z" stroke="currentColor"/>
+      <path d="M32 16v66M13 49h38M32 31l13 18-13 18-13-18Z" stroke="currentColor"/>
+      <circle cx="32" cy="49" r="3" fill="currentColor"/>
+    </svg>
+    <div><p class="zxc-kicker">ПЕРЕД ДУЭЛЬЮ</p><h2 id="zxc-info-title">{% if tournament_settings.zxc_applications_open %}Приём заявок открыт{% else %}Набор ещё не открыт{% endif %}</h2><p>Участие бесплатное, для жителей России. Можно играть и здесь, и в командном турнире. Начало набора объявим в <a href="{{ tournament_settings.telegram_url }}">Telegram FRI</a>.</p></div>
+    <a class="zxc-secondary zxc-back" href="{% url 'home' %}"><span aria-hidden="true">←</span> На главную FRI</a>
+  </div>
+</section>
+<section class="zxc-details wrap" aria-labelledby="zxc-rules-title">
+  <div><p class="zxc-kicker">SHADOW FIEND ONLY</p><h2 id="zxc-rules-title">Одна вышка.<br>Или две смерти.</h2>{% if tournament_settings.zxc_format %}<p class="zxc-rule-copy">{{ tournament_settings.zxc_format }}</p>{% else %}<p class="zxc-rule-copy">Побеждает тот, кто первым снесёт вышку соперника или убьёт его дважды. Последние 8 матчей покажем на трансляции.</p>{% endif %}<p class="zxc-rule-copy">Расписание появится в Telegram и Discord.</p></div>
+  <div class="zxc-prizes"><p class="zxc-kicker">ПРИЗЫ</p><h2>Забери своё</h2>{% if tournament_settings.zxc_prizes %}<p class="zxc-prize-copy">{{ tournament_settings.zxc_prizes }}</p>{% else %}<ol><li><strong>1 место</strong> Аркана на Shadow Fiend</li><li><strong>2 место</strong> Дезоляторы на Shadow Fiend</li><li><strong>3–5 места</strong> Dota Plus на месяц</li></ol>{% endif %}</div>
+</section>
+<div class="wrap">{% include 'registration_dates.html' %}</div>
+{% endblock %}

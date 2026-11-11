@@ -1,0 +1,7 @@
+{% if tournament_settings.registration_starts_on or tournament_settings.registration_ends_on or tournament_settings.bracket_ready_on %}
+<dl class="registration-dates">
+  {% if tournament_settings.registration_starts_on %}<div><dt>Открытие заявок</dt><dd><time datetime="{{ tournament_settings.registration_starts_on|date:'Y-m-d' }}">{{ tournament_settings.registration_starts_on|date:"j E Y" }}</time></dd></div>{% endif %}
+  {% if tournament_settings.registration_ends_on %}<div><dt>Закрытие заявок</dt><dd><time datetime="{{ tournament_settings.registration_ends_on|date:'Y-m-d' }}">{{ tournament_settings.registration_ends_on|date:"j E Y" }}</time></dd></div>{% endif %}
+  {% if tournament_settings.bracket_ready_on %}<div><dt>Формирование сетки до</dt><dd><time datetime="{{ tournament_settings.bracket_ready_on|date:'Y-m-d' }}">{{ tournament_settings.bracket_ready_on|date:"j E Y" }}</time></dd></div>{% endif %}
+</dl>
+{% endif %}

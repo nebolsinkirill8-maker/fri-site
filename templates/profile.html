@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Мой профиль — FRI{% endblock %}
+{% block content %}
+<section class="account-shell wrap"><p class="eyebrow">FRI / ЛИЧНЫЙ КАБИНЕТ</p><h1>{% if user.nickname %}{{ user.nickname }}{% else %}Ты с нами{% endif %}</h1><p class="profile-email">{{ user.email }}</p>
+  <div class="info-card"><h2>Игровой профиль</h2><dl class="profile-details"><div><dt>Никнейм</dt><dd>{{ user.nickname|default:"Не указан" }}</dd></div><div><dt>Telegram</dt><dd>{{ user.telegram|default:"Не указан" }}</dd></div><div><dt>Steam</dt><dd>{% if user.steam_url %}<a href="{{ user.steam_url }}" target="_blank" rel="noopener noreferrer">Открыть профиль ↗</a>{% else %}Не указан{% endif %}</dd></div><div><dt>MMR</dt><dd>{{ user.mmr|default_if_none:"Не указан" }}</dd></div><div><dt>Позиция</dt><dd>{{ user.get_position_display|default:"Не указана" }}</dd></div></dl><a href="{% url 'profile_edit' %}">Заполнить или изменить профиль ↗</a></div>
+  <dl class="profile-details"><div><dt>Discord</dt><dd>{{ user.discord|default:"Не указан" }}</dd></div><div><dt>Команда</dt><dd>{{ user.team_name|default:"Без команды" }}</dd></div></dl>
+  <div class="info-card"><h2>Заявка на командный турнир</h2>
+    {% if application %}<p class="account-status" data-status="{{ application.status }}">{{ application.get_status_display }}</p><p><a href="{% url 'application' %}">Открыть заявку №{{ application.pk }} ↗</a></p>
+    {% elif tournament_settings.applications_open %}<p>Для подачи нужны никнейм, Steam, Discord и Telegram. Если играешь с командой, укажи её название в профиле.</p><a class="primary" href="{% url 'application' %}">Подать заявку ↗</a>
+    {% else %}<p>Приём заявок пока закрыт. <a href="{{ tournament_settings.telegram_url }}">Анонсы в Telegram</a>.</p>{% endif %}
+  </div>
+  <div class="info-card"><h2>ZXC 1 vs 1</h2>
+    {% if zxc_application %}<p class="account-status" data-status="{{ zxc_application.status }}">{{ zxc_application.get_status_display }}</p><p><a href="{% url 'zxc_application' %}">Открыть заявку №{{ zxc_application.pk }} ↗</a></p>
+    {% elif tournament_settings.zxc_applications_open %}<p>Отдельная заявка на дуэли. Можно участвовать в обоих направлениях.</p><a class="primary" href="{% url 'zxc_application' %}">Подать заявку на ZXC ↗</a>
+    {% else %}<p>Приём заявок на ZXC пока закрыт.</p>{% endif %}
+  </div>
+  <div class="info-card"><h2>Поддержка</h2><p>Задай вопрос организаторам или проверь ответ на обращение.</p><p><a href="{% url 'support:index' %}">Открыть поддержку ↗</a></p></div>
+  <p class="quiet">Профиль виден тебе и организаторам. Данные не публикуются на странице турнира.</p>
+  <a class="primary" href="{% url 'tournament' %}#participation">Как участвовать ↗</a>{% if user.is_staff %}<p><a href="{% url 'admin:index' %}">Панель организатора ↗</a></p>{% endif %}
+</section>{% endblock %}

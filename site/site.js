@@ -11,7 +11,8 @@ document.querySelectorAll("[data-action]").forEach((button) => {
   });
 });
 
-if (friContent.prize) document.querySelector("#prize-value").textContent = friContent.prize;
+const prizeValue = document.querySelector("#prize-value");
+if (prizeValue && friContent.prize) prizeValue.textContent = friContent.prize;
 
 function makeLink(label, url) {
   const element = document.createElement(url ? "a" : "span");
@@ -26,10 +27,11 @@ contactList.replaceChildren(...friContent.contacts.map(({ name, url }) => {
   item.append(makeLink(name, url));
   return item;
 }));
-document.querySelector("#contact-note").hidden = friContent.contacts.every(({ url }) => url);
+const contactNote = document.querySelector("#contact-note");
+if (contactNote) contactNote.hidden = friContent.contacts.every(({ url }) => url);
 
-if (friContent.sponsors.length) {
-  const sponsorList = document.querySelector("#sponsor-list");
+const sponsorList = document.querySelector("#sponsor-list");
+if (sponsorList && friContent.sponsors.length) {
   for (const { name, logo, url } of friContent.sponsors) {
     const item = document.createElement("li");
     const card = makeLink(name, url);
@@ -44,7 +46,8 @@ if (friContent.sponsors.length) {
     sponsorList.append(item);
   }
   sponsorList.hidden = false;
-  document.querySelector("#sponsors-empty").hidden = true;
+  const sponsorsEmpty = document.querySelector("#sponsors-empty");
+  if (sponsorsEmpty) sponsorsEmpty.hidden = true;
 }
 
 const milestones = friContent.stages
@@ -70,8 +73,10 @@ function updateMilestone() {
   milestoneTime.textContent = `${days} д · ${hours} ч · ${minutes % 60} мин`;
 }
 
-updateMilestone();
-if (milestones.length) setInterval(updateMilestone, 1000);
+if (milestoneName && milestoneTime) {
+  updateMilestone();
+  if (milestones.length) setInterval(updateMilestone, 1000);
+}
 
 const organizerCarousel = document.querySelector("#organizer-carousel");
 const organizerControls = document.querySelector("#organizer-controls");
@@ -79,7 +84,6 @@ const organizerCount = document.querySelector("#organizer-count");
 const organizerName = document.querySelector("#organizer-name");
 const organizerCards = [...organizerCarousel.querySelectorAll("figure")];
 const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
-const positions = ["center", "right", "left"];
 
 let activeOrganizer = 0;
 let moving = false;
@@ -88,8 +92,11 @@ let animations = [];
 
 function setPositions() {
   organizerCards.forEach((card, index) => {
-    const distance = (index - activeOrganizer + positions.length) % positions.length;
-    card.dataset.position = positions[distance];
+    const count = organizerCards.length;
+    const distance = (index - activeOrganizer + count) % count;
+    card.dataset.position = distance === 0 ? "center"
+      : distance === 1 ? "right"
+      : distance === count - 1 ? "left" : "hidden";
   });
 }
 
@@ -103,8 +110,8 @@ function announceOrganizer() {
 }
 
 function appearance(card) {
-  const { transform, filter, opacity } = getComputedStyle(card);
-  return { transform, filter, opacity };
+  const { transform, filter, opacity, visibility } = getComputedStyle(card);
+  return { transform, filter, opacity, visibility };
 }
 
 async function turnOrganizer(direction) {
@@ -238,62 +245,65 @@ reducedMotion.addEventListener('change', ({ matches }) => {
 
 // The prize is a single, first-view sequence, independent of generic reveals.
 const prizeScene = document.querySelector('.prize');
-const prizeValue = document.querySelector('#prize-value');
-const prizeLabel = prizeValue.textContent;
-prizeValue.setAttribute('aria-label', prizeLabel);
-prizeValue.replaceChildren(...Array.from(prizeLabel, (character, index) => {
-  const span = document.createElement('span');
-  span.className = character === ' ' ? 'prize-glyph prize-space' : 'prize-glyph';
-  span.textContent = character === ' ' ? '\u00a0' : character;
-  span.setAttribute('aria-hidden', 'true');
-  span.dataset.order = index;
-  return span;
-}));
-const rays = document.createElement('div');
-rays.className = 'prize-burst-rays';
-rays.setAttribute('aria-hidden', 'true');
-prizeScene.prepend(rays);
-function firePrize() {
-  if (prizeScene.classList.contains('prize-fired')) return;
-  prizeScene.classList.add('prize-fired');
-  prizeValue.querySelectorAll('.prize-glyph').forEach((glyph, index) => {
-    const lean = (index % 2 ? 1 : -1) * 18;
-    animateDetail(glyph, [
-      { opacity: .75, transform: `translateY(45px) scale(.8) rotate(${lean}deg)`, offset: 0 },
-      { opacity: 1, transform: `translateY(-20px) scale(1.28) rotate(${-lean / 4}deg)`, offset: .58 },
-      { opacity: 1, transform: 'translateY(5px) scale(.96) rotate(1deg)', offset: .8 },
-      { opacity: 1, transform: 'translateY(0) scale(1) rotate(0deg)', offset: 1 },
-    ], { duration: 1050, delay: 130 + index * 65, fill: 'backwards' });
-  });
-  [...rays.children].forEach((ray, index) => {
-    const angle = index * 360 / rays.children.length + (index % 3) * 7;
-    animateDetail(ray, [
-      { opacity: 0, transform: `rotate(${angle}deg) translateX(2vw) scale(.2)` },
-      { opacity: .7, transform: `rotate(${angle}deg) translateX(16vw) scale(1)`, offset: .4 },
-      { opacity: 0, transform: `rotate(${angle}deg) translateX(43vw) scale(.25)` },
-    ], { duration: 650 + index % 3 * 90, delay: 60, fill: 'backwards' });
-  });
+if (prizeScene && prizeValue) {
+  const prizeLabel = prizeValue.textContent;
+  prizeValue.setAttribute('aria-label', prizeLabel);
+  prizeValue.replaceChildren(...Array.from(prizeLabel, (character, index) => {
+    const span = document.createElement('span');
+    span.className = character === ' ' ? 'prize-glyph prize-space' : 'prize-glyph';
+    span.textContent = character === ' ' ? '\u00a0' : character;
+    span.setAttribute('aria-hidden', 'true');
+    span.dataset.order = index;
+    return span;
+  }));
+  const rays = document.createElement('div');
+  rays.className = 'prize-burst-rays';
+  rays.setAttribute('aria-hidden', 'true');
+  prizeScene.prepend(rays);
+  function firePrize() {
+    if (prizeScene.classList.contains('prize-fired')) return;
+    prizeScene.classList.add('prize-fired');
+    prizeValue.querySelectorAll('.prize-glyph').forEach((glyph, index) => {
+      const lean = (index % 2 ? 1 : -1) * 18;
+      animateDetail(glyph, [
+        { opacity: .75, transform: `translateY(45px) scale(.8) rotate(${lean}deg)`, offset: 0 },
+        { opacity: 1, transform: `translateY(-20px) scale(1.28) rotate(${-lean / 4}deg)`, offset: .58 },
+        { opacity: 1, transform: 'translateY(5px) scale(.96) rotate(1deg)', offset: .8 },
+        { opacity: 1, transform: 'translateY(0) scale(1) rotate(0deg)', offset: 1 },
+      ], { duration: 1050, delay: 130 + index * 65, fill: 'backwards' });
+    });
+    [...rays.children].forEach((ray, index) => {
+      const angle = index * 360 / rays.children.length + (index % 3) * 7;
+      animateDetail(ray, [
+        { opacity: 0, transform: `rotate(${angle}deg) translateX(2vw) scale(.2)` },
+        { opacity: .7, transform: `rotate(${angle}deg) translateX(16vw) scale(1)`, offset: .4 },
+        { opacity: 0, transform: `rotate(${angle}deg) translateX(43vw) scale(.25)` },
+      ], { duration: 650 + index % 3 * 90, delay: 60, fill: 'backwards' });
+    });
+  }
+  if ('IntersectionObserver' in window) {
+    prizeScene.classList.add('prize-ready');
+    const prizeObserver = new IntersectionObserver((entries) => {
+      if (entries.some(entry => entry.isIntersecting)) {
+        firePrize();
+        prizeObserver.disconnect();
+      }
+    }, { threshold: .4 });
+    prizeObserver.observe(prizeScene);
+  } else firePrize();
 }
-if ('IntersectionObserver' in window) {
-  prizeScene.classList.add('prize-ready');
-  const prizeObserver = new IntersectionObserver((entries) => {
-    if (entries.some(entry => entry.isIntersecting)) {
-      firePrize();
-      prizeObserver.disconnect();
-    }
-  }, { threshold: .4 });
-  prizeObserver.observe(prizeScene);
-} else firePrize();
 
 const soundtrack = document.querySelector('#soundtrack');
 const soundPanel = document.querySelector('.sound-panel');
+if (soundtrack && soundPanel) {
+const soundOptIn = soundPanel.hasAttribute('data-opt-in');
 const soundToggle = document.querySelector('.sound-toggle');
 const soundStatus = document.querySelector('#sound-status');
 const runawayMute = document.querySelector('.runaway-mute');
-let dodges = 0;
 let autoStartCancelled = false;
-const muteHome = runawayMute.parentElement;
+const muteHome = runawayMute?.parentElement;
 function resetRunaway() {
+  if (!runawayMute) return;
   muteHome.append(runawayMute);
   runawayMute.classList.remove('is-running');
   runawayMute.style.cssText = '';
@@ -309,10 +319,12 @@ function updateSound() {
   const playing = friContent.music?.youtubeId ? youtubePlaying : !soundtrack.paused && !soundtrack.muted;
   soundPanel.classList.toggle('is-playing', playing);
   soundToggle.setAttribute('aria-pressed', String(playing));
-  soundToggle.setAttribute('aria-label', playing ? 'Выключить музыку' : 'Включить музыку');
+  soundToggle.setAttribute('aria-label', playing ? 'Выключить музыку' : 'Нажми ▶ для музыки');
   soundStatus.textContent = playing ? 'TRAVIS SCOTT · M — выкл.' : 'Нажми ▶ для музыки';
-  runawayMute.disabled = !playing;
-  if (!playing) { resetRunaway(); dodges = 0; }
+  if (runawayMute) {
+    runawayMute.disabled = !playing;
+    if (!playing) resetRunaway();
+  }
 }
 function muteTrack() {
   autoStartCancelled = true;
@@ -381,19 +393,23 @@ if (friContent.music?.youtubeId) {
   soundtrack.loop = false;
   soundtrack.addEventListener('loadedmetadata', () => {
     soundtrack.currentTime = startSeconds < soundtrack.duration ? startSeconds : 0;
-    if (!autoStartCancelled) soundtrack.play().catch(() => { soundStatus.textContent = 'Звук после первого клика'; });
+    if (!soundOptIn && !autoStartCancelled) soundtrack.play().catch(() => { soundStatus.textContent = 'Звук после первого клика'; });
   }, { once: true });
-  soundtrack.src = friContent.music.src;
   soundtrack.volume = .35;
   soundToggle.disabled = false;
   updateSound();
-  soundStatus.textContent = 'Включить · с 0:35';
-  document.addEventListener('click', (event) => {
-    if (autoStartCancelled || !soundtrack.paused || event.target.closest('.sound-panel, .runaway-mute')) return;
-    soundtrack.play().catch(() => {});
-  }, { once: true });
+  if (!soundOptIn) soundStatus.textContent = 'Включить · с 0:35';
+  if (!soundOptIn) {
+    soundtrack.src = friContent.music.src;
+    document.addEventListener('click', (event) => {
+      if (autoStartCancelled || !soundtrack.paused || event.target.closest('.sound-panel, .runaway-mute')) return;
+      soundtrack.play().catch(() => {});
+    }, { once: true });
+  }
   soundToggle.addEventListener('click', async () => {
     if (!soundtrack.paused) { muteTrack(); return; }
+    // Attach the source and request playback in the same trusted click.
+    if (!soundtrack.hasAttribute('src')) soundtrack.src = friContent.music.src;
     try { await soundtrack.play(); updateSound(); }
     catch { soundStatus.textContent = 'Не удалось включить трек'; }
   });
@@ -408,7 +424,7 @@ if (friContent.music?.youtubeId) {
     catch { updateSound(); }
   });
 }
-runawayMute.addEventListener('pointerenter', (event) => {
+runawayMute?.addEventListener('pointerenter', (event) => {
   if (event.pointerType !== 'mouse' || reducedMotion.matches || runawayMute.disabled || document.activeElement === runawayMute) return;
   document.body.append(runawayMute);
   runawayMute.classList.add('is-running');
@@ -421,14 +437,15 @@ runawayMute.addEventListener('pointerenter', (event) => {
   }
   runawayMute.style.left = `${x}px`; runawayMute.style.top = `${y}px`;
 });
-runawayMute.addEventListener('click', muteTrack);
-runawayMute.addEventListener('focus', resetRunaway);
-window.addEventListener('resize', resetRunaway);
+runawayMute?.addEventListener('click', muteTrack);
+runawayMute?.addEventListener('focus', resetRunaway);
+if (runawayMute) window.addEventListener('resize', resetRunaway);
 document.addEventListener('keydown', (event) => {
   if (event.code !== 'KeyM' || event.ctrlKey || event.metaKey || event.altKey || event.target.closest('input, textarea, select, [contenteditable]')) return;
   muteTrack();
 });
 
+}
 const readingProgress = document.createElement('div');
 readingProgress.className = 'reading-progress';
 readingProgress.setAttribute('aria-hidden', 'true');
