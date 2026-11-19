@@ -1,0 +1,17 @@
+<aside id="fri-sidebar" class="home-sidebar" aria-label="Навигация FRI">
+  <button class="fri-menu-close" type="button">Закрыть ×</button>
+  <a class="side-brand" href="{% url 'home' %}">FRI <span aria-hidden="true">✦</span><small>PLAYER HUB / DOTA 2</small></a>
+  <details class="side-menu" open><summary>Разделы сайта <span aria-hidden="true">⌄</span></summary>
+  <nav aria-label="Разделы сайта">
+    <p class="side-label">НАВИГАЦИЯ</p>
+    <a href="{% url 'home' %}" {% if not team_sidebar %}aria-current="page"{% endif %}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 10 9-7 9 7v10H3Z M9 20v-7h6v7"/></svg>Главная</a>
+    <a href="{% url 'tournament' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 3h10v6a5 5 0 0 1-10 0ZM7 5H3v3a4 4 0 0 0 5 4m9-7h4v3a4 4 0 0 1-5 4m-4 2v6m-5 1h10"/></svg>Командный турнир</a>
+    <a href="{% url 'zxc' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 3 17 17M20 3 3 20M3 15l6 6m6-18 6 6"/></svg>ZXC · 1 vs 1</a>
+    {% if team_sidebar %}<p class="side-label">КОМАНДНЫЙ ТУРНИР</p><a href="#participation">Как участвовать</a><a href="#tournament">Этапы турнира</a><a href="#stream">Трансляция</a><a href="#organizers">Организаторы</a>{% if fri_content.sponsors %}<a href="#sponsors">Спонсоры</a>{% endif %}<a href="#faq">Вопросы и ответы</a>{% endif %}
+    <p class="side-label">ЛИЧНОЕ</p>
+    {% if user.is_authenticated %}<a href="{% url 'profile' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="7" r="4"/><path d="M4 21v-3a8 8 0 0 1 16 0v3Z"/></svg>Мой профиль</a><a href="{% url 'application' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 3h14v18H5ZM8 8h8m-8 4h8m-8 4h5"/></svg>Моя заявка</a>{% else %}<a href="{% url 'login' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 3h7v18h-7M3 12h13m-5-5 5 5-5 5"/></svg>Войти в аккаунт</a>{% endif %}
+    <a href="{% url 'support:index' %}"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 14v-3a8 8 0 0 1 16 0v3M4 11H2v7h5v-7Zm16 0h2v7h-5v-7Zm0 7v3h-7"/></svg>Поддержка</a>
+    {% if user.is_authenticated %}<form action="{% url 'logout' %}" method="post">{% csrf_token %}<button type="submit">Выйти из аккаунта ↗</button></form>{% endif %}
+  </nav></details>
+  <div class="side-note"><span aria-hidden="true">✦</span><p>Твоя игра.<br><strong>Твой следующий шаг.</strong></p><small>Выбери турнир и узнай условия участия.</small></div>
+</aside>

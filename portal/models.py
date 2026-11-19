@@ -34,16 +34,30 @@ class UserManager(BaseUserManager):
         return self.create_user(email, password, **extra_fields)
 
 
+# Bump when the text of templates/privacy.html changes materially.
+PRIVACY_POLICY_VERSION = '2026-11-20'
+
+
 class User(AbstractUser):
+    class Equipment(models.TextChoices):
+        YES = 'yes', 'Есть'
+        NO = 'no', 'Нет'
+
+    media_consent = models.JSONField(default=dict, blank=True, editable=False)
+    privacy_accepted_at = models.DateTimeField('Согласие на обработку ПДн', null=True, blank=True, editable=False)
+    privacy_policy_version = models.CharField('Редакция политики ПДн', max_length=20, blank=True, editable=False)
     username = None
     email = models.EmailField('Электронная почта', unique=True)
     nickname = models.CharField('Никнейм', max_length=80, blank=True)
+    photo = models.FileField('Фотография', upload_to='player-photos/', blank=True)
     discord = models.CharField('Discord', max_length=80, blank=True)
     team_name = models.CharField('Название команды', max_length=100, blank=True)
     telegram = models.CharField('Telegram', max_length=33, blank=True, validators=[RegexValidator(r'^@?[A-Za-z][A-Za-z0-9_]{4,31}$', 'Укажите username Telegram (5–32 символа), можно с @.')])
     steam_url = models.URLField('Профиль Steam', blank=True, validators=[validate_steam_url])
     mmr = models.PositiveIntegerField('MMR', blank=True, null=True, validators=[MaxValueValidator(20000)])
     position = models.CharField('Игровая позиция', max_length=1, blank=True, choices=[('1', '1 — Керри'), ('2', '2 — Мидер'), ('3', '3 — Оффлейнер'), ('4', '4 — Поддержка'), ('5', '5 — Полная поддержка')])
+    microphone = models.CharField('Микрофон', max_length=3, blank=True, choices=Equipment.choices)
+    webcam = models.CharField('Веб-камера', max_length=3, blank=True, choices=Equipment.choices)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []
     objects = UserManager()
@@ -71,7 +85,8 @@ class TournamentSettings(models.Model):
     bracket_ready_on = models.DateField('Формирование сетки до', blank=True, null=True)
     zxc_prizes = models.TextField('Призы ZXC', blank=True)
     zxc_format = models.TextField('Формат ZXC', blank=True)
-    prize = models.CharField('Призовой фонд', max_length=200, blank=True)
+    prize_base = models.PositiveIntegerField('Вклад организаторов в призовой фонд', default=0, help_text='В зимбабвийских долларах. К нему прибавляются все взносы спонсоров.')
+    prize = models.CharField('Призовой фонд', max_length=200, blank=True, help_text='Пока фонд равен нулю, этот текст показывается вместо суммы. Когда сумма больше нуля, текст становится подписью под ней, например «и мерч от партнёров».')
     group_format = models.TextField('Групповой этап', blank=True)
     playoff_format = models.TextField('Плей-офф', blank=True)
     main_event = models.TextField('Основное событие', blank=True)
@@ -89,6 +104,11 @@ class TournamentSettings(models.Model):
 
     def __str__(self):
         return 'Командный турнир FRI'
+
+    def prize_total(self):
+        contributions = PrizeContribution.objects.aggregate(total=models.Sum('amount'))['total'] or 0
+        return self.prize_base + contributions
+    prize_total.short_description = 'Призовой фонд сейчас'
 
 
 class Stage(models.Model):
@@ -112,6 +132,8 @@ class Sponsor(models.Model):
         PARTNER = 'partner', 'Ключевой партнёр'
 
     name = models.CharField('Название или имя', max_length=150)
+    gallery_slot = models.PositiveSmallIntegerField('Рама в галерее', choices=[(slot, str(slot)) for slot in range(1, 7)], null=True, blank=True, unique=True)
+    description = models.TextField('Описание', blank=True)
     logo_url = models.URLField('Ссылка на логотип', blank=True)
     url = models.URLField('Сайт', blank=True)
     presentation = models.CharField('Оформление', max_length=10, choices=Presentation.choices, default=Presentation.STANDARD)
@@ -122,6 +144,28 @@ class Sponsor(models.Model):
 
     def __str__(self):
         return self.name
+
+
+class PrizeContribution(models.Model):
+    class Status(models.TextChoices):
+        PLEDGED = 'pledged', 'Обещан'
+        RECEIVED = 'received', 'Получен'
+
+    # Removing a sponsor removes its contributions, so the public fund shrinks accordingly.
+    sponsor = models.ForeignKey(Sponsor, on_delete=models.CASCADE, related_name='prize_contributions', verbose_name='Спонсор')
+    amount = models.PositiveIntegerField('Сумма, зимбабвийских долларов')
+    # Both statuses count toward the public fund; the status is for organizers only.
+    status = models.CharField('Статус', max_length=8, choices=Status.choices, default=Status.PLEDGED)
+    note = models.CharField('Внутренняя заметка', max_length=300, blank=True)
+    created_at = models.DateTimeField('Добавлен', auto_now_add=True)
+
+    class Meta:
+        ordering = ['created_at', 'pk']
+        verbose_name = 'Взнос в призовой фонд'
+        verbose_name_plural = 'Взносы в призовой фонд'
+
+    def __str__(self):
+        return f'{self.sponsor}: {self.amount}'
 
 
 class Team(models.Model):

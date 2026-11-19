@@ -1,0 +1,59 @@
+.zxc-page {
+  color-scheme: light;
+  --zxc-black: #fff;
+  --zxc-bone: #151313;
+  --zxc-red: #861b35;
+  --zxc-muted: #4d4446;
+  --zxc-rule: #15131330;
+  background: #fff;
+  color: #151313;
+}
+.zxc-shell { max-width: 1260px; }
+.zxc-shell::before, .zxc-shell::after, .zxc-coordinate { display: none; }
+.zxc-terminal-nav, .zxc-hero, .zxc-terminal-section, .zxc-ticker, .zxc-final-cta {
+  background: #fff;
+}
+.zxc-terminal-nav a, .zxc-ticker { color: #151313; }
+.zxc-terminal-nav > div { flex-wrap: wrap; }
+.zxc-hero { display: block; min-height: 0; }
+.zxc-hero::after { content: none; }
+.zxc-art {
+  position: static;
+  display: block;
+  width: 100%;
+  height: clamp(220px, 44vw, 590px);
+  object-fit: contain;
+  filter: grayscale(1);
+}
+.zxc-hero-inner { padding-block: 0 clamp(24px, 5vw, 60px); }
+.zxc-screenline { color: #4d4446; margin-bottom: clamp(24px, 5vw, 56px); }
+.zxc-hero h1 { color: #151313; text-shadow: none; font-size: clamp(92px, 17vw, 210px); }
+.zxc-kicker, .zxc-tagline em, .zxc-live-closed { color: #861b35; }
+.zxc-intro, .zxc-rule-copy, .zxc-date-note, .zxc-live { color: #4d4446; }
+.zxc-button { background: #151313; border-color: #151313; color: #fff; }
+.zxc-button:hover { background: #861b35; }
+.zxc-page :focus-visible { outline-color: #861b35; }
+/* Split hero adapted from 21st Hero 08 for the ZXC poster. */
+.zxc-hero {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  grid-template-areas: "copy art";
+  align-items: center;
+}
+.zxc-art { grid-area: art; height: auto; aspect-ratio: 3 / 2; }
+.zxc-hero-inner {
+  grid-area: copy;
+  padding: clamp(28px, 5vw, 72px) clamp(18px, 4vw, 56px);
+}
+.zxc-hero h1 { font-size: clamp(92px, 13vw, 172px); }
+.zxc-hero-bottom { display: grid; gap: 20px; }
+.zxc-hero-cta { min-width: 0; max-width: 360px; margin-top: 0; }
+.zxc-intro { max-width: 38ch; text-wrap: pretty; }
+.zxc-button { text-wrap: balance; }
+@media (max-width: 760px) {
+  .zxc-hero {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "art" "copy";
+  }
+  .zxc-art { max-height: 320px; }
+}

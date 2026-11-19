@@ -9,8 +9,13 @@ User = get_user_model()
 
 
 class AccountTests(TestCase):
+    def test_signed_in_user_does_not_see_login_form_again(self):
+        user = User.objects.create_user('logged-in@example.com', 'Safe-Password-471!')
+        self.client.force_login(user)
+        self.assertRedirects(self.client.get(reverse('login')), reverse('profile'))
+
     def test_register_creates_hashed_password_and_server_session(self):
-        response = self.client.post(reverse('register'), {'email': 'PLAYER@Example.com', 'password1': 'Long-Safe-Password-471!', 'password2': 'Long-Safe-Password-471!'})
+        response = self.client.post(reverse('register'), {'email': 'PLAYER@Example.com', 'password1': 'Long-Safe-Password-471!', 'password2': 'Long-Safe-Password-471!', 'privacy_consent': 'on'})
         self.assertRedirects(response, reverse('profile_edit'))
         user = User.objects.get()
         self.assertEqual(user.email, 'player@example.com')

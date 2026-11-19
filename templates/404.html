@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Страница не найдена — FRI{% endblock %}
+{% block page_head %}<link rel="stylesheet" href="{% static 'legal.css' %}">{% endblock %}
+{% block content %}
+<section class="account-shell wrap error-page" aria-labelledby="error-title">
+  <p class="error-code" aria-hidden="true">404</p>
+  <h1 id="error-title">Такой страницы нет</h1>
+  <p>Возможно, ссылка устарела или в адресе опечатка.</p>
+  <a class="primary" href="{% url 'home' %}">На главную FRI ↗</a>
+</section>
+{% endblock %}

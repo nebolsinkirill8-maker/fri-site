@@ -9,13 +9,14 @@
   <title>First Russian International — киберспортивный турнир</title>
   <link rel="icon" href="{% static 'assets/mark.svg' %}" type="image/svg+xml">
   <link rel="stylesheet" href="{% static 'style.css' %}">
-  <link rel="stylesheet" href="{% static 'app.css' %}">
+  <link rel="stylesheet" href="{% static 'app.css' %}?v=prize-fund-1">
   {{ fri_content|json_script:"fri-content" }}
   <script src="{% static 'django-content.js' %}" defer></script>
   <script src="{% static 'site.js' %}" defer></script>
-  <script src="{% static 'sponsor-orbit.js' %}" defer></script>
+<link rel="stylesheet" href="{% static 'participation.css' %}?v=2">
 </head>
 <body id="top">
+  {% include 'partials/public_header.html' %}
   <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
     <symbol id="spark" viewBox="0 0 100 100">
       <path fill="currentColor" d="M50 0 58 39 100 50 58 59 50 100 41 59 0 50 41 39Z"/>
@@ -25,17 +26,6 @@
     </symbol>
   </svg>
   <a class="skip" href="#main">К содержанию</a>
-  <header class="header">
-    <div class="wrap header-inner">
-      <a class="brand" href="{% url 'home' %}" aria-label="FRI — на главную">FRI<svg aria-hidden="true"><use href="#spark"/></svg></a>
-      <nav aria-label="Разделы главной">
-        <a href="#participation">Как участвовать</a>
-        <a href="#tournament">Этапы</a>
-        <a href="#organizers">Организаторы</a>
-      </nav>
-      <div class="account-nav">{% if user.is_authenticated %}<a href="{% url 'profile' %}">Мой профиль</a><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Выйти</button></form>{% else %}<a href="{% url 'login' %}">Войти ↗</a>{% endif %}</div>
-    </div>
-  </header>
   <main id="main">
     <section class="hero" aria-labelledby="title">
       <div class="poster-world" aria-hidden="true">
@@ -62,18 +52,7 @@
       <div class="hero-edition wrap" aria-hidden="true"><span>FRI</span><svg><use href="#spark"/></svg></div>
     </section>
 
-    <section class="participation paper" id="participation" aria-labelledby="participation-title">
-      <div class="wrap participation-inner">
-        <p class="participation-status"><span aria-hidden="true"></span> {% if tournament_settings.applications_open %}Приём заявок открыт{% else %}Приём заявок ещё не открыт{% endif %}</p>
-        <h2 id="participation-title">Как участвовать</h2>
-        <p>Участие бесплатное. Командный тур открыт школьникам и студентам колледжей, которые живут в России.</p>
-        <p>Можно записаться одному или со своей командой. Каждый игрок создаёт свой аккаунт и подаёт заявку. У игроков одной команды должно совпадать её название в профиле.</p>
-        <p>Планируем онлайн-матчи. Возможность провести финал на площадке зависит от спонсоров. Расписание и приглашения в лобби будут в группе участников, куда добавят администраторы.</p>
-        <p>Для заявки заполни Steam, никнейм, Discord и Telegram. Если заявок окажется больше мест, организаторы расширят сетку.</p>
-        <p>Аккаунт для просмотра условий не нужен. Создание профиля не считается заявкой.</p>
-        {% if tournament_settings.applications_open %}<a class="primary" href="{% url 'application' %}">Подать или проверить заявку <svg aria-hidden="true"><use href="#arrow"/></svg></a>{% else %}<a class="primary" href="{{ tournament_settings.telegram_url }}">Следить за анонсами <svg aria-hidden="true"><use href="#arrow"/></svg></a>{% endif %}
-      </div>
-    </section>
+
 
     <section class="tournament paper" id="tournament" aria-labelledby="tournament-title">
       <div class="wrap tournament-inner">
@@ -106,14 +85,16 @@
       </div>
     </section>
 
-    {% if tournament_settings.prize %}<section class="prize" aria-labelledby="prize-title">
+    {% if fri_content.prize %}<section class="prize" aria-labelledby="prize-title">
       <div class="prize-print" aria-hidden="true"></div>
       <svg class="prize-spark prize-spark-one" aria-hidden="true"><use href="#spark"/></svg>
       <svg class="prize-spark prize-spark-two" aria-hidden="true"><use href="#spark"/></svg>
       <div class="wrap prize-inner">
         <h2 id="prize-title">Призовой фонд</h2>
-        <div class="prize-amount"><p id="prize-value">{{ tournament_settings.prize }}</p></div>
+        <div class="prize-amount"><p id="prize-value">{{ fri_content.prize }}</p></div>
+        {% if prize_total and tournament_settings.prize %}<p class="prize-caption">{{ tournament_settings.prize }}</p>{% endif %}
       </div>
+      {% if prize_total %}<small class="prize-currency">в зимбабвийских долларах</small>{% endif %}
     </section>{% endif %}
 
     <section class="stream-section wrap" id="stream" aria-labelledby="stream-title">
@@ -170,42 +151,58 @@
       <p class="organizer-note wrap">Михаил — организатор. Егор, Александр и Кирилл — соорганизаторы. <a href="{{ tournament_settings.discord_url }}" target="_blank" rel="noopener noreferrer">Discord FRI ↗</a></p>
     </section>
 
-    {% if fri_content.sponsors %}<section class="sponsors paper" id="sponsors" aria-labelledby="sponsors-title">
-        <div class="sponsor-apple-decor" aria-hidden="true">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-            <img src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy">
-        </div>
-      <div class="wrap">
-        <div class="section-head">
-          <h2 id="sponsors-title">Спонсоры</h2>
-          <p>Компании и люди, которые помогают провести турнир.</p>
-        </div>
-        <div class="sponsor-scene" data-sponsor-orbit>
-          <div class="sponsor-space" role="list" aria-label="Партнёры FRI">
-            <img class="sponsor-apple" src="{% static 'assets/sponsor-apple.png' %}" width="600" height="600" alt="" loading="lazy" aria-hidden="true">
-            {% for sponsor in fri_content.sponsors %}
-            <div class="sponsor-sticker sponsor-sticker--{{ sponsor.presentation }}" role="listitem" data-sponsor-index="{{ forloop.counter0 }}">
-              {% if sponsor.url %}<a class="sponsor-sticker-card sponsor-tier sponsor-tier-{{ sponsor.presentation }}" href="{{ sponsor.url }}">{% else %}<div class="sponsor-sticker-card sponsor-tier sponsor-tier-{{ sponsor.presentation }}">{% endif %}
-                {% if sponsor.presentation == 'partner' %}<small class="sponsor-rank">Ключевой партнёр</small>{% elif sponsor.presentation == 'supporter' %}<small class="sponsor-rank">Партнёр FRI</small>{% endif %}
-                {% if sponsor.logo %}<img src="{{ sponsor.logo }}" loading="lazy" alt="">{% endif %}<strong>{{ sponsor.name }}</strong>
-              {% if sponsor.url %}</a>{% else %}</div>{% endif %}
+    <section class="participation paper" id="participation" aria-labelledby="participation-title">
+      <div class="wrap participation-inner">
+        <p class="participation-status"><span aria-hidden="true"></span> {% if tournament_settings.applications_open %}Приём заявок открыт{% else %}Приём заявок ещё не открыт{% endif %}</p>
+        <h2 id="participation-title">Как участвовать</h2>
+<p class="participation-lead">Участие бесплатное. Командный тур открыт школьникам и студентам колледжей, которые живут в России.</p><div class="participation-steps"><article class="participation-step"><span class="step-number">01 / FRI</span><h3>Один или с командой</h3><p>Можно записаться одному или со своей командой. Каждый игрок создаёт свой аккаунт и подаёт заявку. Названия команд назначают организаторы.</p></article><article class="participation-step"><span class="step-number">02 / FRI</span><h3>Расскажи о себе</h3><p>Для заявки заполни Steam, никнейм, Discord и Telegram. Если заявок окажется больше мест, организаторы расширят сетку.</p></article><article class="participation-step"><span class="step-number">03 / FRI</span><h3>Встретимся в лобби</h3><p>Планируем онлайн-матчи. Возможность провести финал на площадке зависит от спонсоров. Расписание и приглашения в лобби будут в группе участников, куда добавят администраторы.</p></article></div><p class="participation-note">Аккаунт для просмотра условий не нужен. Создание профиля не считается заявкой.</p>
+        {% if tournament_settings.applications_open %}<a class="primary" href="{% url 'application' %}">Подать или проверить заявку <svg aria-hidden="true"><use href="#arrow"/></svg></a>{% else %}<a class="primary" href="{{ tournament_settings.telegram_url }}">Следить за анонсами <svg aria-hidden="true"><use href="#arrow"/></svg></a>{% endif %}
+      </div>
+    </section>
+
+    <section class="paper" id="sponsors" aria-labelledby="sponsors-title">
+      <div class="wrap fri-gallery">
+        <h2 id="sponsors-title">Спонсоры</h2>
+        <input class="fri-gallery-pause" type="checkbox" id="fri-gallery-pause">
+        <label for="fri-gallery-pause">Пауза прокрутки</label>
+      </div>
+      <div class="fri-frames">
+        {% for row in "123" %}
+        <div class="fri-frame-row">
+          <div class="fri-frame-track">
+            {% for copy in "12" %}
+            <div class="fri-frame-group"{% if not forloop.first %} aria-hidden="true"{% endif %}>
+              {% for sponsor in gallery_frames %}
+              <button type="button" class="fri-frame fri-frame-opening"
+                      data-slot="{{ forloop.counter }}" aria-label="{{ sponsor.name|default:'Рама спонсора' }}"
+                      {% if copy == "2" or row != "1" %}tabindex="-1"{% endif %}>
+                {% if sponsor.logo_url %}<img src="{{ sponsor.logo_url }}" alt="" loading="lazy" draggable="false">{% endif %}
+              </button>
+              {% endfor %}
             </div>
             {% endfor %}
           </div>
-          <button class="orbit-toggle" type="button" data-orbit-toggle aria-pressed="false" hidden>Пауза</button>
         </div>
+        {% endfor %}
       </div>
-    </section>{% endif %}
+      <dialog class="fri-sponsor-dialog" aria-labelledby="fri-sponsor-caption">
+        <form method="dialog"><button type="submit">Закрыть ×</button></form>
+        <div data-sponsor-content></div>
+      </dialog>
+      {% for sponsor in gallery_frames %}
+      <template id="fri-sponsor-{{ forloop.counter }}">
+        <figure>
+          {% if sponsor.logo_url %}<img src="{{ sponsor.logo_url }}" alt="">{% endif %}
+          <figcaption id="fri-sponsor-caption">
+            <strong>{{ sponsor.name|default:"Место для спонсора" }}</strong>
+            {% if sponsor.description %}<p>{{ sponsor.description }}</p>{% endif %}
+            {% if sponsor.url %}<a href="{{ sponsor.url }}">Сайт спонсора ↗</a>{% endif %}
+          </figcaption>
+        </figure>
+      </template>
+      {% endfor %}
+      <script src="{% static 'sponsor-gallery.js' %}" defer></script>
+    </section>
 
     <section class="questions paper" id="faq" aria-labelledby="questions-title">
       <div class="wrap">
@@ -228,8 +225,13 @@
     <section class="closing" aria-labelledby="closing-title">
       <div class="wrap closing-inner">
         <svg aria-hidden="true"><use href="#spark"/></svg>
+        {% if tournament_settings.applications_open %}
+        <h2 id="closing-title">Приём заявок открыт</h2>
+        <a class="primary" href="{% url 'application' %}">Подать или проверить заявку <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+        {% else %}
         <h2 id="closing-title">Не пропусти набор</h2>
         <a class="primary" href="{{ tournament_settings.telegram_url }}">Следить за анонсами <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+        {% endif %}
       </div>
     </section>
 
@@ -244,6 +246,7 @@
         <h2>Контакты</h2>
         <ul id="contact-list"><li><a href="{{ tournament_settings.telegram_url }}">Telegram</a></li><li><a href="{{ tournament_settings.discord_url }}">Discord</a></li></ul>
         <p><a href="{% url 'support:index' %}">Поддержка на сайте ↗</a></p>
+        <p><a href="{% url 'privacy' %}">Политика обработки персональных данных</a></p>
         <p id="contact-note" hidden>Контакты будут объявлены.</p>
         <p>Вопросы об участии можно отправить в личные сообщения <a href="{{ tournament_settings.telegram_url }}">Telegram-канала FRI</a>.</p>
       </div>

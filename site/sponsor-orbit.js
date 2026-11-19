@@ -22,7 +22,7 @@
 
     function position() {
       if (reducedMotion.matches) {
-        cards.forEach(card => card.style.removeProperty('transform'));
+        cards.forEach(card => { card.style.removeProperty('transform'); card.style.removeProperty('--sponsor-brightness'); });
         return;
       }
       const radiusX = Math.max(0, Math.min(width * .32, width / 2 - maxCardWidth * .65 - 12));
@@ -31,6 +31,7 @@
         const angle = phase + index * step;
         const x = Math.sin(angle) * radiusX;
         const z = Math.cos(angle) * radiusZ;
+        card.style.setProperty('--sponsor-brightness', (.45 + .55 * (z / radiusZ + 1) / 2).toFixed(3));
         const y = width < 600 ? Math.cos(angle) * 58 : 0;
         card.style.transform = `translate(-50%, -50%) translate3d(${x.toFixed(3)}px, ${y.toFixed(3)}px, ${z.toFixed(3)}px)`;
       });

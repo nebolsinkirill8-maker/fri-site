@@ -17,12 +17,12 @@ class PageIntegrationTests(TestCase):
 
     def test_zxc_has_its_own_poster_and_does_not_open_registration(self):
         response = self.client.get(reverse('zxc'))
-        self.assertContains(response, 'assets/zxc-lilies.jpg')
-        self.assertContains(response, 'zxc.css')
-        self.assertContains(response, 'Дуэли один на один в Dota 2.')
+        self.assertContains(response, 'assets/zxc-shadow-fiend-seamless.webm')
+        self.assertContains(response, 'zxc-team.css')
+        self.assertContains(response, 'Один мид. Два игрока.')
         self.assertContains(response, 'Набор ещё не открыт')
         self.assertNotContains(response, 'Подать заявку')
-        self.assertNotContains(self.client.get(reverse('tournament')), 'zxc-lilies.jpg')
+        self.assertNotContains(self.client.get(reverse('tournament')), 'zxc-shadow-fiend')
 
     def test_registration_uses_art_not_marketing_columns(self):
         response = self.client.get(reverse('register'))
@@ -38,13 +38,14 @@ class PageIntegrationTests(TestCase):
         self.assertContains(response, '<strong>Кирилл</strong><span>Соорганизатор</span>')
         self.assertContains(response, '<a href="https://discord.gg/qtRGBJMWg8" target="_blank" rel="noopener noreferrer">Discord FRI ↗</a>', html=True)
 
-    def test_sponsors_orbit_uses_crm_content_and_apple(self):
+    def test_sponsors_gallery_uses_configured_frame(self):
         from .models import Sponsor
-        Sponsor.objects.create(name='Тестовый партнёр', presentation='partner', url='https://example.com')
+        Sponsor.objects.create(name='Тестовый партнёр', presentation='partner', gallery_slot=1, url='https://example.com')
         response = self.client.get(reverse('tournament'))
-        self.assertContains(response, 'data-sponsor-orbit')
-        self.assertContains(response, 'assets/sponsor-apple.png')
-        self.assertContains(response, 'sponsor-tier-partner')
+        self.assertContains(response, 'class="fri-frames"', count=1)
+        self.assertContains(response, '<template id="fri-sponsor-1">')
+        self.assertNotContains(response, 'assets/sponsor-apple.png')
+        self.assertNotContains(response, 'data-sponsor-orbit')
         self.assertContains(response, 'Тестовый партнёр')
         self.assertNotContains(response, 'DUMBO')
 
@@ -58,14 +59,16 @@ class PageIntegrationTests(TestCase):
     def test_home_choices_and_empty_tournament(self):
         response = self.client.get(reverse('home'))
         self.assertContains(response, 'Командный турнир')
-        self.assertContains(response, 'ZXC 1 vs 1')
+        self.assertContains(response, 'ZXC <small>1 vs 1</small>')
+        self.assertContains(response, 'class="gateway-portal gateway-team" href="/tournament/"')
+        self.assertNotContains(response, 'href="/accounts/register/"')
         response = self.client.get(reverse('tournament'))
         for old_claim in ('$20 000+', 'зимбабвийских', 'конец декабря'):
             self.assertNotContains(response, old_claim)
         self.assertContains(response, 'Приём заявок ещё не открыт')
         self.assertContains(response, 'Создание профиля не считается заявкой.')
         self.assertNotContains(response, 'id="prize-title"')
-        self.assertNotContains(response, 'id="sponsors"')
+        self.assertContains(response, 'class="fri-frames"', count=1)
         self.assertNotContains(response, 'Прогнозы за внутренние баллы')
         self.assertContains(response, '<details class="stream-preview">')
         self.assertNotContains(response, 'DUMBO')

@@ -1,0 +1,6 @@
+<div class="editor-field{% if full %} editor-field-full{% endif %}">
+  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+  {{ field }}
+  {% if field.errors %}<div class="editor-field-errors" role="alert">{{ field.errors }}</div>{% endif %}
+  {% if field.help_text %}<p class="editor-help" id="{{ field.auto_id }}_helptext">{{ field.help_text }}</p>{% endif %}
+</div>

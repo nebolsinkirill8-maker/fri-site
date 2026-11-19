@@ -1,26 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'cabinet.html' %}
+{% load static %}
 {% block title %}Обращение #{{ ticket.pk }} | FRI{% endblock %}
+{% block page_class %} support-page{% endblock %}
+{% block page_head %}<link rel="stylesheet" href="{% static 'support.css' %}">{% endblock %}
 {% block content %}
-<section class="account-shell wrap">
-  <p><a href="{% url 'support:index' %}">Все обращения</a></p>
-  <h1 class="support-message">{{ ticket.subject }}</h1>
-  <p>Обращение #{{ ticket.pk }} · {{ ticket.get_status_display }}</p>
+<section class="support-desk support-conversation wrap" aria-labelledby="conversation-title">
+  <a class="support-back" href="{% url 'support:index' %}">← Все обращения</a>
+  <header class="support-heading"><div><p class="eyebrow">FRI / ОБРАЩЕНИЕ #{{ ticket.pk }}</p><h1 id="conversation-title">{{ ticket.subject }}</h1></div><span class="support-status" data-status="{{ ticket.status }}">{{ ticket.get_status_display }}</span></header>
+  <div class="support-thread" aria-label="Переписка по обращению">
   {% for message in thread %}
-    <article class="info-card support-message">
-      <h2>{% if message.from_staff %}Поддержка FRI{% else %}Ты{% endif %}</h2>
-      <p class="quiet">{{ message.created_at|date:"d.m.Y H:i" }}</p>
-      {{ message.body|linebreaks }}
+    <article class="support-bubble{% if message.from_staff %} support-bubble-staff{% endif %}">
+      <header><h2>{% if message.from_staff %}Поддержка FRI{% else %}Ты{% endif %}</h2><time datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:"d.m.Y H:i" }}</time></header>
+      <div class="support-message-body">{{ message.body|linebreaks }}</div>
     </article>
   {% endfor %}
+  </div>
   {% if ticket.status == 'open' %}
-    <form class="account-form" method="post">
+    <section class="support-reply" aria-label="Ответить в обращении"><form class="account-form support-form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <button class="primary" type="submit">Отправить сообщение</button>
-    </form>
+    </form><p class="support-privacy">Не отправляй пароль или коды доступа.</p></section>
   {% else %}
     {{ form.non_field_errors }}
-    <p>Это обращение закрыто. Если остались вопросы, <a href="{% url 'support:index' %}">создай новое</a>.</p>
+    <div class="support-closed"><h2>Разговор завершён</h2><p>Это обращение закрыто. Если остались вопросы, <a href="{% url 'support:index' %}">создай новое</a>.</p></div>
   {% endif %}
 </section>
 {% endblock %}

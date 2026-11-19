@@ -1,33 +1,38 @@
-{% extends 'base.html' %}
+{% extends 'cabinet.html' %}
+{% load static %}
 {% block title %}Поддержка | FRI{% endblock %}
+{% block page_class %} support-page{% endblock %}
+{% block page_head %}<link rel="stylesheet" href="{% static 'support.css' %}">{% endblock %}
 {% block content %}
-<section class="account-shell wrap">
-  <h1>Поддержка</h1>
-  <p>Задай вопрос организаторам. Ответ появится здесь, в твоём обращении.</p>
-  <section class="info-card" aria-labelledby="new-ticket-title">
-    <h2 id="new-ticket-title">Новое обращение</h2>
-    <p>Не отправляй пароль или коды доступа.</p>
-    <form class="account-form" method="post">
+<section class="support-desk wrap" aria-labelledby="support-title">
+  <header class="support-heading"><div><p class="eyebrow">FRI / СВЯЗЬ С ОРГАНИЗАТОРАМИ</p><h1 id="support-title">На связи<span aria-hidden="true">.</span></h1><p>Вопросы об участии, заявках и аккаунте. Вся переписка останется здесь.</p></div><a class="support-back" href="{% url 'profile' %}">← Личный кабинет</a></header>
+  <div class="support-layout">
+  <section class="support-compose" aria-labelledby="new-ticket-title">
+    <div class="support-section-label"><span>01 / НАПИСАТЬ</span><svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M4 4h16v12H9l-5 4V4Z"/><path d="M8 8h8M8 12h5"/></svg></div>
+    <h2 id="new-ticket-title">Новое обращение</h2><p class="support-intro">Опиши, что случилось. Если вопрос о заявке, укажи её номер.</p>
+    <form class="account-form support-form" method="post">
       {% csrf_token %}
       {{ form.as_p }}
       <button class="primary" type="submit">Отправить обращение</button>
     </form>
+    <p class="support-privacy">Не отправляй пароль или коды доступа. Обращение видно только тебе и организаторам.</p>
   </section>
-  <section aria-labelledby="ticket-list-title">
-    <h2 id="ticket-list-title">Мои обращения</h2>
+  <section class="support-inbox" aria-labelledby="ticket-list-title">
+    <div class="support-inbox-heading"><h2 id="ticket-list-title">Мои обращения</h2><span>{{ tickets.paginator.count }}</span></div>
     {% for ticket in tickets %}
-      <div class="info-card support-message">
-        <h3><a href="{% url 'support:detail' ticket.pk %}">#{{ ticket.pk }} {{ ticket.subject }}</a></h3>
-        <p>{{ ticket.get_status_display }} · {{ ticket.updated_at|date:"d.m.Y H:i" }}</p>
-      </div>
-    {% empty %}<p>Обращений пока нет.</p>{% endfor %}
+      <a class="support-ticket" href="{% url 'support:detail' ticket.pk %}">
+        <div class="support-ticket-meta"><span>ОБРАЩЕНИЕ #{{ ticket.pk }}</span><span class="support-status" data-status="{{ ticket.status }}">{{ ticket.get_status_display }}</span></div>
+        <h3>{{ ticket.subject }}</h3><div class="support-ticket-bottom"><time datetime="{{ ticket.updated_at|date:'c' }}">{{ ticket.updated_at|date:"d.m.Y H:i" }}</time><span aria-hidden="true">↗</span></div>
+      </a>
+    {% empty %}{# Empty State layout adapted from wensity, 21st.dev demo 27575; adjacent form supplies the action. #}<div class="support-empty"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M8 10h32v23H22L8 42V10Z"/><path d="M17 19h14M17 25h9"/></svg><h3>Пока без вопросов</h3><p>Обращений пока нет. Отправь первое через форму. Здесь появятся переписка и ответы организаторов.</p></div>{% endfor %}
     {% if tickets.has_other_pages %}
-      <nav aria-label="Страницы обращений">
+      <nav class="support-pagination" aria-label="Страницы обращений">
         {% if tickets.has_previous %}<a href="?page={{ tickets.previous_page_number }}">Назад</a>{% endif %}
         <span>{{ tickets.number }} из {{ tickets.paginator.num_pages }}</span>
         {% if tickets.has_next %}<a href="?page={{ tickets.next_page_number }}">Дальше</a>{% endif %}
       </nav>
     {% endif %}
   </section>
+  </div>
 </section>
 {% endblock %}

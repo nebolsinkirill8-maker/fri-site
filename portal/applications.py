@@ -23,6 +23,9 @@ class ApplicationForm(forms.Form):
         super().__init__(*args, **kwargs)
         if competition == 'zxc':
             self.fields.pop('is_student')
+        else:
+            self.fields.pop('resides_in_russia')
+            self.fields.pop('is_student')
 
 
 def application_profile_ready(user):
@@ -67,7 +70,7 @@ def application(request, competition='team'):
                     'telegram': user.telegram,
                     'discord': user.discord.strip(),
                     'team_name': user.team_name.strip() if competition == 'team' else '',
-                    'resides_in_russia': form.cleaned_data['resides_in_russia'],
+                    'resides_in_russia': form.cleaned_data.get('resides_in_russia', False),
                     'is_student': form.cleaned_data.get('is_student', False),
                     'mmr': user.mmr,
                     'position': user.position,

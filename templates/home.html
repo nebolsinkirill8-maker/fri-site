@@ -1,10 +1,24 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block page_class %} arena-page{% endblock %}
+{% block page_head %}<link rel="stylesheet" href="{% static 'home.css' %}"><link rel="stylesheet" href="{% static 'navigation.css' %}?v=2">{% endblock %}
+{% block site_header %}{% include 'partials/public_header.html' %}{% endblock %}
 {% block content %}
-<section class="choice-hero wrap">
-  <div class="choice-copy"><p class="eyebrow">FIRST RUSSIAN INTERNATIONAL</p><h1>Прояви<br>себя<span class="accent">.</span></h1><p class="choice-intro">Командный турнир и ZXC 1 vs 1</p><p class="quiet">Два направления FRI по Dota 2. Участие бесплатное.</p><p class="quiet">{% if tournament_settings.applications_open %}Приём заявок на командный тур открыт.{% else %}Приём заявок на командный тур ещё не открыт.{% endif %}</p>
-    <div class="competition-choices"><a class="primary" href="{% if user.is_authenticated %}{% url 'profile' %}{% else %}{% url 'register' %}{% endif %}">{% if user.is_authenticated %}Личный кабинет{% else %}Зарегистрироваться{% endif %} ↗</a><a href="{% url 'tournament' %}#participation">Условия участия ↗</a></div>
-    <p class="choice-zxc"><a href="{% url 'zxc' %}">ZXC 1 vs 1 ↗</a> <span class="quiet">· Дуэли в Dota 2</span></p>
+
+<section class="arena" aria-labelledby="arena-title">
+  <header class="arena-masthead"><div><p>FIRST RUSSIAN INTERNATIONAL</p><h1 id="arena-title">Два пути.<br>Одна игра<span>.</span></h1></div><p class="arena-caption">DOTA 2<br><strong>ВЫБЕРИ СВОЙ ТУРНИР</strong><span>Участие бесплатное</span></p></header>
+  <div class="arena-worlds">
+    <a class="gateway-portal gateway-team" href="{% url 'tournament' %}">
+      <div class="arena-meta"><span>01 / ОСНОВНОЕ СОБЫТИЕ</span><span>TEAM</span></div>
+      <span class="arena-watermark" aria-hidden="true">FRI</span><img class="arena-statue" src="{% static 'assets/poster-figure.webp' %}" alt="" width="700" height="900" fetchpriority="high">
+      <div class="arena-copy"><p class="arena-kicker">ПОБЕДА НАЧИНАЕТСЯ С КОМАНДЫ</p><h2>Командный турнир</h2><p class="arena-description">Школьники и студенты колледжей.<br>Твоя команда. Ваша игра.</p><span class="arena-action">Открыть турнир <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 16h21M17 7l9 9-9 9"/></svg></span></div>
+    </a>
+    <a class="gateway-portal gateway-zxc" href="{% url 'zxc' %}">
+      <div class="arena-meta"><span>02 / ДУЭЛЬ</span><span>SOLO</span></div>
+      <div class="arena-zxc-art" aria-hidden="true"></div><span class="arena-duel" aria-hidden="true">1:1</span>
+      <div class="arena-copy"><p class="arena-kicker">SHADOW FIEND / MID ONLY</p><h2>ZXC <small>1 vs 1</small></h2><p class="arena-description">Без команды за спиной.<br>Только ты и твой соперник.</p><span class="arena-action">Войти в ZXC <svg viewBox="0 0 32 32" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 16h21M17 7l9 9-9 9"/></svg></span></div>
+    </a>
   </div>
-  <div class="choice-art" aria-hidden="true"></div>
+  <div class="arena-bottom"><span>ДВА НАПРАВЛЕНИЯ FRI</span><p>Сначала выбери турнир. Условия и заявка внутри.</p><span aria-hidden="true">DOTA 2 / FRI</span></div>
 </section>
 {% endblock %}

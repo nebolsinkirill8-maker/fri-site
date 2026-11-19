@@ -1,0 +1,39 @@
+.profile-editor-page { background:radial-gradient(ellipse at 100% 0,#58162d66,transparent 50%) #160910; }
+.profile-editor { max-width:1120px; padding-block:48px 72px; }
+.editor-heading { display:flex; align-items:flex-end; justify-content:space-between; gap:28px; padding-bottom:30px; margin-bottom:32px; border-bottom:1px solid #fff2e826; }
+.editor-heading .eyebrow { font-size:10px; margin-bottom:14px; }
+.editor-heading h1 { font:850 clamp(30px,4.3vw,56px)/1.04 var(--sans); letter-spacing:-.045em; margin:0 0 15px; text-transform:none; text-shadow:none; }
+.editor-heading h1 > span { display:inline; color:var(--punch); }
+.editor-heading p:not(.eyebrow) { color:#d9bec9; font-size:13px; max-width:50ch; }
+.editor-heading > a { font-size:12px; flex-shrink:0; color:#d9bec9; }
+.editor-layout { display:grid; grid-template-columns:minmax(0,1.9fr) minmax(230px,1fr); align-items:start; gap:42px; }
+.editor-form { min-width:0; }
+.editor-form fieldset { padding:24px 0 28px; margin:0 0 24px; border:0; border-bottom:1px solid #fff2e826; min-width:0; }
+.editor-form legend { font:800 21px/1.3 var(--sans); padding:0; }
+.editor-form legend > span { display:inline-block; margin-right:13px; color:var(--punch); font-size:12px; vertical-align:middle; }
+.editor-fields { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:23px 20px; }
+.editor-field-full { grid-column:1 / -1; }
+.editor-field label { display:block; margin-bottom:9px; font-size:12px; font-weight:750; color:var(--ivory); }
+.editor-field input,.editor-field select { display:block; width:100%; min-height:49px; padding:12px 13px; font:500 14px/1.4 var(--sans); color:var(--ivory); background:#25121c; border:1px solid #9c5c7488; border-radius:0; }
+.editor-field input:focus-visible,.editor-field select:focus-visible { border-color:var(--punch); outline:2px solid var(--punch); outline-offset:2px; }
+.editor-field input[aria-invalid="true"],.editor-field select[aria-invalid="true"] { border-color:#ffb5c9; }
+.editor-field select option { background:#25121c; }
+.editor-help { font-size:11px; line-height:1.55; color:#cdb2be; margin-top:8px; }
+.editor-form .errorlist { margin:8px 0; font-size:12px; padding-block:4px!important; }
+.editor-errors, .editor-form .form-error-summary { margin-bottom:24px; padding:15px; border-left:3px solid var(--punch); background:#390d22; color:#ffd8e3; font-size:14px; }
+.editor-section-note { margin-bottom:22px; font-size:13px; color:#d9bec9; }
+.editor-save { display:flex; align-items:center; flex-wrap:wrap; gap:24px; }
+.editor-save .primary { min-width:240px; justify-content:space-between; }
+.editor-save > a { font-size:12px; color:#d9bec9; }
+.editor-guide { position:sticky; top:26px; padding:22px 24px 30px; background:var(--noise),var(--paper); color:var(--coal); clip-path:polygon(0 0,100% 0,100% 98%,91% 99%,83% 98%,71% 100%,59% 99%,49% 100%,36% 98%,24% 100%,12% 99%,0 100%); }
+.editor-print { padding-bottom:23px; margin-bottom:24px; border-bottom:1px solid #65203c55; color:var(--wine); }
+.editor-print > span { font-size:9px; font-weight:800; letter-spacing:.14em; }
+.editor-print svg { display:block; width:150px; height:135px; margin:17px auto; color:var(--berry); }
+.editor-print strong { display:block; font:900 clamp(27px,3vw,41px)/.95 var(--sans); letter-spacing:-.05em; }
+.editor-guide h2 { font:850 20px/1.2 var(--sans); margin:0 0 13px; }
+.editor-guide > p { font-size:12px; margin-bottom:15px; }
+.editor-guide-note { border-top:1px solid #65203c55; padding-top:17px; margin-top:18px; font-size:11px; }
+.editor-guide > a { display:inline-block; font-size:12px; font-weight:750; margin-top:22px; }
+.editor-guide :focus-visible { outline-color:var(--berry); }
+@media(max-width:800px) { .editor-layout { grid-template-columns:1fr; gap:35px; }.editor-guide { position:static; }.editor-print { display:none; }.editor-guide { padding:24px 24px 32px; } }
+@media(max-width:520px) { .profile-editor { padding-block:30px 45px; }.editor-heading { flex-direction:column; align-items:flex-start; gap:18px; }.editor-heading h1 { margin-inline:0; }.editor-fields { grid-template-columns:1fr; gap:21px; }.editor-field-full { grid-column:auto; }.editor-save { align-items:stretch; flex-direction:column; gap:18px; }.editor-save .primary { width:100%; min-width:0; }.editor-guide > p { font-size:13px; } }

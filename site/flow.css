@@ -1,0 +1,41 @@
+/* FRI account flows: editorial paper guide + readable working surface. */
+.application-page { --flow-line:#84536a; --flow-muted:#dfc6d1; background:radial-gradient(ellipse at 80% 0,#391226,transparent 60%),#160910; }
+.application-page .account-shell { max-width:1120px; padding-block:50px 80px; }
+.application-page h1 { font:850 clamp(34px,5vw,64px)/1.08 var(--sans); text-transform:none; text-shadow:none; letter-spacing:-.045em; }
+.flow-dot { display:inline; color:var(--punch); }
+.flow-intro { color:var(--flow-muted); }
+.application-layout { display:grid; grid-template-columns:minmax(0,1.6fr) minmax(240px,.85fr); gap:32px; align-items:start; margin-top:32px; }
+.application-main { min-width:0; }
+.application-main .registration-dates { margin-top:0; gap:18px; padding:24px; border:1px solid var(--flow-line); background:#29121e; justify-content:space-between; text-align:left; }
+.application-main .info-card { padding:30px; margin-block:24px; border:1px solid var(--flow-line); background:linear-gradient(135deg,#351627,#211019); }
+.application-main h2 { font:800 25px/1.25 var(--sans); margin-bottom:16px; }
+.application-main h3 { font:750 18px/1.4 var(--sans); margin-block:26px 12px; }
+.application-main p { line-height:1.65; overflow-wrap:anywhere; }
+.application-main .quiet { color:var(--flow-muted); }
+.application-main .account-form { max-width:none; padding:28px; background:#211019; border:1px solid var(--flow-line); }
+.application-main textarea { min-height:140px; }
+.application-main .account-form textarea,.application-main .account-form input:not([type=checkbox]),.registration-main .account-form input { background:#2a1521; color:var(--ivory); border:1px solid #a56b82; }
+.application-main .account-form label,.registration-main .account-form label { line-height:1.5; }
+.application-main .account-form input[type=checkbox] { width:24px; height:24px; }
+.application-main .account-form p:has(input[type=checkbox]) { padding-block:10px; }
+.application-guide { padding:32px; background:var(--noise),var(--ivory); color:var(--coal); border-top:5px solid var(--punch); }
+.application-guide .eyebrow { color:var(--berry); font-size:11px; }
+.flow-mark { display:block; margin-block:25px; font:700 clamp(54px,7vw,92px)/1 var(--display); letter-spacing:-.06em; border-block:1px solid #7a2a4b55; padding-block:22px; }
+.application-guide h2 { font:850 26px/1.1 var(--sans); margin-bottom:18px; }
+.application-guide h3 { font:800 17px/1.4 var(--sans); margin-bottom:12px; }
+.application-guide p { font-size:15px; line-height:1.6; }
+.application-guide > div { margin-top:28px; padding-top:24px; border-top:1px solid #7a2a4b55; }
+.application-guide a,.flow-back a { display:inline-flex; min-height:44px; align-items:center; font-weight:750; }
+.flow-private { margin-top:32px; font-size:13px!important; }
+.flow-empty { display:flex; flex-direction:column; align-items:center; gap:16px; text-align:center; padding-block:48px!important; }
+.flow-empty svg { color:var(--punch); }.flow-empty h2 { margin:0; }.flow-empty p { max-width:30ch; }
+.application-badge { display:flex; flex-wrap:wrap; gap:12px; align-items:center; width:fit-content; padding:10px 12px; border:1px solid #936076; background:#160910; font-size:14px; margin-bottom:20px; }
+.application-badge-state { display:inline-flex; gap:8px; align-items:center; color:#f4ce8e; font-weight:750; }.application-badge[data-status=accepted] .application-badge-state { color:#bce4c5; }.application-badge[data-status=rejected] .application-badge-state { color:#ffafc3; }.application-badge-number { border-left:1px solid #936076; padding-left:12px; color:#dfc6d1; }
+.registration-main { border:1px solid #84536a; border-top:4px solid var(--punch); box-shadow:0 28px 70px #0005; }
+.registration-main h1 { text-transform:none; text-shadow:none; letter-spacing:-.04em; }
+.registration-main > p { line-height:1.6; color:#dfc6d1; }
+.registration-main .primary { width:100%; min-height:50px; justify-content:center; }
+.form-error-summary { padding:18px; border:1px solid #ff91b1; background:#41182b; margin-bottom:24px; line-height:1.6; }
+.form-error-summary ul { margin:10px 0 0; }
+.application-page a:focus-visible,.registration-layout :focus-visible { outline:3px solid var(--punch); outline-offset:4px; }
+@media(max-width:740px) { .application-layout { grid-template-columns:1fr; gap:24px; }.application-page .account-shell { padding-block:32px 50px; }.application-main .info-card,.application-main .account-form,.application-guide { padding:24px; }.application-main .registration-dates { gap:20px; }.registration-layout { padding-inline:18px; } }

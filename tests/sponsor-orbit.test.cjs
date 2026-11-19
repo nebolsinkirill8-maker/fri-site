@@ -7,7 +7,7 @@ const source = fs.readFileSync('site/sponsor-orbit.js', 'utf8');
 function node(extra = {}) {
   const handlers = {};
   return Object.assign({
-    handlers, attrs: {}, style: { removeProperty(key) { delete this[key]; } },
+    handlers, attrs: {}, style: { removeProperty(key) { delete this[key]; }, setProperty(key, value) { this[key] = value; } },
     addEventListener(name, handler) { handlers[name] = handler; },
     setAttribute(name, value) { this.attrs[name] = value; },
     contains(target) { return this === target; },
@@ -46,6 +46,8 @@ test('stickers orbit with depth, auto-advance, and a single sponsor is not clone
   const instance = orbit();
   assert.match(instance.cards[0].style.transform, /58\.000px, 130\.000px/);
   assert.match(instance.cards[2].style.transform, /-58\.000px, -130\.000px/);
+  assert.equal(instance.cards[0].style['--sponsor-brightness'], '1.000');
+  assert.equal(instance.cards[2].style['--sponsor-brightness'], '0.450');
   const initial = instance.cards[0].style.transform;
   instance.tick(0);
   instance.tick(50);

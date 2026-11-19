@@ -1,20 +1,58 @@
-{% extends 'base.html' %}
+{% extends 'cabinet.html' %}
+{% load static %}
 {% block title %}Мой профиль — FRI{% endblock %}
+{% block page_class %} profile-page{% endblock %}
+{% block page_head %}<link rel="stylesheet" href="{% static 'profile.css' %}?v=aligned-1"><link rel="stylesheet" href="{% static 'profile-photo.css' %}">{% endblock %}
+{% block main_class %}{% endblock %}
+{% block before_content %}{% endblock %}
 {% block content %}
-<section class="account-shell wrap"><p class="eyebrow">FRI / ЛИЧНЫЙ КАБИНЕТ</p><h1>{% if user.nickname %}{{ user.nickname }}{% else %}Ты с нами{% endif %}</h1><p class="profile-email">{{ user.email }}</p>
-  <div class="info-card"><h2>Игровой профиль</h2><dl class="profile-details"><div><dt>Никнейм</dt><dd>{{ user.nickname|default:"Не указан" }}</dd></div><div><dt>Telegram</dt><dd>{{ user.telegram|default:"Не указан" }}</dd></div><div><dt>Steam</dt><dd>{% if user.steam_url %}<a href="{{ user.steam_url }}" target="_blank" rel="noopener noreferrer">Открыть профиль ↗</a>{% else %}Не указан{% endif %}</dd></div><div><dt>MMR</dt><dd>{{ user.mmr|default_if_none:"Не указан" }}</dd></div><div><dt>Позиция</dt><dd>{{ user.get_position_display|default:"Не указана" }}</dd></div></dl><a href="{% url 'profile_edit' %}">Заполнить или изменить профиль ↗</a></div>
-  <dl class="profile-details"><div><dt>Discord</dt><dd>{{ user.discord|default:"Не указан" }}</dd></div><div><dt>Команда</dt><dd>{{ user.team_name|default:"Без команды" }}</dd></div></dl>
-  <div class="info-card"><h2>Заявка на командный турнир</h2>
-    {% if application %}<p class="account-status" data-status="{{ application.status }}">{{ application.get_status_display }}</p><p><a href="{% url 'application' %}">Открыть заявку №{{ application.pk }} ↗</a></p>
-    {% elif tournament_settings.applications_open %}<p>Для подачи нужны никнейм, Steam, Discord и Telegram. Если играешь с командой, укажи её название в профиле.</p><a class="primary" href="{% url 'application' %}">Подать заявку ↗</a>
-    {% else %}<p>Приём заявок пока закрыт. <a href="{{ tournament_settings.telegram_url }}">Анонсы в Telegram</a>.</p>{% endif %}
+<section class="player-dashboard wrap" aria-labelledby="player-name">
+  <header class="player-heading">
+    {% if user.photo %}<img class="dashboard-photo" src="{% url 'profile_photo' %}" alt="Фото профиля" width="96" height="112">{% endif %}
+    <div><p class="eyebrow">FRI / ЛИЧНЫЙ КАБИНЕТ</p><h1 id="player-name">{{ user.nickname|default:"Мой профиль" }}</h1><p class="profile-email">{{ user.email }}</p></div>
+    <a class="player-edit" href="{% url 'profile_edit' %}">Редактировать профиль <span aria-hidden="true">↗</span></a>
+  </header>
+  <div class="player-grid">
+    {% include 'partials/cabinet_navigation.html' %}
+    <section class="player-pass" aria-labelledby="player-pass-title">
+      <div class="player-pass-top"><span>PLAYER / FRI</span><img src="{% static 'assets/mark.svg' %}" width="27" height="27" alt=""></div>
+      <h2 id="player-pass-title">Игровой профиль</h2>
+      <div class="player-rating"><div><span>MMR</span><strong>{{ user.mmr|default_if_none:"—" }}</strong></div><div><span>Позиция</span><strong class="player-position">{{ user.get_position_display|default:"Не указана" }}</strong></div></div>
+      <dl class="player-fields">
+        <div><dt>Никнейм</dt><dd>{{ user.nickname|default:"Не указан" }}</dd></div>
+        <div><dt>Steam</dt><dd>{% if user.steam_url %}<a href="{{ user.steam_url }}" target="_blank" rel="noopener noreferrer">Открыть профиль ↗</a>{% else %}Не указан{% endif %}</dd></div>
+        <div><dt>Telegram</dt><dd>{{ user.telegram|default:"Не указан" }}</dd></div>
+        <div><dt>Discord</dt><dd>{{ user.discord|default:"Не указан" }}</dd></div>
+        <div><dt>Команда</dt><dd>{{ user.team_name|default:"Без команды" }}</dd></div>
+        <div><dt>Микрофон</dt><dd>{{ user.get_microphone_display|default:"Не указано" }}</dd></div>
+        <div><dt>Веб-камера</dt><dd>{{ user.get_webcam_display|default:"Не указано" }}</dd></div>
+      </dl>
+      <p class="player-private">Данные видишь только ты и организаторы.</p>
+    </section>
+    <div class="player-activity">
+      <div class="player-section-title" id="player-applications"><h2>Твои заявки</h2><a href="{% url 'tournament' %}#participation">Условия участия ↗</a></div>
+      <article class="entry-card entry-card-team">
+        <div class="entry-art" aria-hidden="true"></div><div class="entry-content"><p class="entry-category">DOTA 2 / КОМАНДЫ</p><h3>Командный турнир</h3>
+          {% if application %}{% include 'partials/application_badge.html' with entry=application %}<p class="entry-description">{% if application.status == 'pending' %}Организаторы рассматривают заявку. Решение появится здесь.{% elif application.status == 'accepted' %}Заявка принята. Подробности доступны в заявке.{% else %}Решение организаторов доступно в заявке.{% endif %}</p><a class="entry-link" href="{% url 'application' %}">Открыть заявку №{{ application.pk }} ↗</a>
+          {% elif tournament_settings.applications_open %}<p class="entry-description">Для заявки нужны никнейм, Steam, Discord и Telegram.</p><a class="entry-link" href="{% url 'application' %}">Подать заявку ↗</a>
+          {% else %}<p class="entry-closed">Приём заявок пока закрыт.</p><a class="entry-link" href="{{ tournament_settings.telegram_url }}">Анонсы в Telegram ↗</a>{% endif %}
+        </div>
+      </article>
+      <article class="entry-card entry-card-zxc">
+        <div class="entry-art" aria-hidden="true"></div><div class="entry-content"><p class="entry-category">SHADOW FIEND / ДУЭЛИ</p><h3>ZXC 1 vs 1</h3>
+          {% if zxc_application %}{% include 'partials/application_badge.html' with entry=zxc_application %}<p class="entry-description">{% if zxc_application.status == 'pending' %}Организаторы рассматривают заявку. Решение появится здесь.{% elif zxc_application.status == 'accepted' %}Заявка принята. Подробности доступны в заявке.{% else %}Решение организаторов доступно в заявке.{% endif %}</p><a class="entry-link" href="{% url 'zxc_application' %}">Открыть заявку №{{ zxc_application.pk }} ↗</a>
+          {% elif tournament_settings.zxc_applications_open %}<p class="entry-description">Отдельная заявка на дуэли один на один.</p><a class="entry-link" href="{% url 'zxc_application' %}">Подать заявку на ZXC ↗</a>
+          {% else %}<p class="entry-closed">Приём заявок на ZXC пока закрыт.</p><a class="entry-link" href="{% url 'zxc' %}">О дуэлях ↗</a>{% endif %}
+        </div>
+      </article>
+      <aside class="player-support"><div><h2>Нужна помощь?</h2><p>Вопросы по заявкам и ответы организаторов.</p></div><a href="{% url 'support:index' %}">Открыть поддержку ↗</a></aside>
+      {% if fri_accepted %}
+      <section id="esports" class="player-support">
+        <div><h2>Киберспорт</h2><p>Заявка принята. Проверь сообщение организатора в своей заявке.</p></div>
+      </section>
+      {% endif %}
+      {% if user.is_staff %}<a class="player-admin" href="{% url 'admin:index' %}">Панель организатора ↗</a>{% endif %}
+    </div>
   </div>
-  <div class="info-card"><h2>ZXC 1 vs 1</h2>
-    {% if zxc_application %}<p class="account-status" data-status="{{ zxc_application.status }}">{{ zxc_application.get_status_display }}</p><p><a href="{% url 'zxc_application' %}">Открыть заявку №{{ zxc_application.pk }} ↗</a></p>
-    {% elif tournament_settings.zxc_applications_open %}<p>Отдельная заявка на дуэли. Можно участвовать в обоих направлениях.</p><a class="primary" href="{% url 'zxc_application' %}">Подать заявку на ZXC ↗</a>
-    {% else %}<p>Приём заявок на ZXC пока закрыт.</p>{% endif %}
-  </div>
-  <div class="info-card"><h2>Поддержка</h2><p>Задай вопрос организаторам или проверь ответ на обращение.</p><p><a href="{% url 'support:index' %}">Открыть поддержку ↗</a></p></div>
-  <p class="quiet">Профиль виден тебе и организаторам. Данные не публикуются на странице турнира.</p>
-  <a class="primary" href="{% url 'tournament' %}#participation">Как участвовать ↗</a>{% if user.is_staff %}<p><a href="{% url 'admin:index' %}">Панель организатора ↗</a></p>{% endif %}
-</section>{% endblock %}
+</section>
+{% endblock %}

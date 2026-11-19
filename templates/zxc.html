@@ -1,41 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}ZXC 1 vs 1 | FRI{% endblock %}
-{% block theme_color %}#0b090a{% endblock %}
+{% block title %}ZXC / дуэли Shadow Fiend — FRI{% endblock %}
+{% block theme_color %}#ffffff{% endblock %}
 {% block page_class %} zxc-page{% endblock %}
-{% block page_head %}
-  <meta name="description" content="ZXC от FRI. Дуэли 1 на 1 в Dota 2.">
-  <link rel="stylesheet" href="{% static 'zxc.css' %}">
-{% endblock %}
+{% block page_head %}<meta name="description" content="Турнир ZXC 1 на 1 по Shadow Fiend от FRI. Правила дуэлей, даты и призы."><link rel="stylesheet" href="{% static 'zxc-team.css' %}?v=4">{% endblock %}
+{% block site_header %}{% include 'partials/public_header.html' %}{% endblock %}
 {% block content %}
-<section class="zxc-hero" aria-labelledby="zxc-title">
-  <img class="zxc-art" src="{% static 'assets/zxc-lilies.jpg' %}" width="1672" height="941" alt="" fetchpriority="high">
-  <div class="zxc-hero-inner wrap">
-    <p class="zxc-kicker">FRI <span aria-hidden="true">/</span> DOTA 2 DUELS</p>
-    <h1 id="zxc-title">ZXC <span>1 VS 1</span></h1>
-    <p class="zxc-tagline">Никто не прикроет.</p>
-    <p class="zxc-intro">Дуэли один на один в Dota 2. Только Shadow Fiend.</p>
-    <div class="zxc-actions">
-      <a class="zxc-button" href="{% if user.is_authenticated %}{% url 'zxc_application' %}{% else %}{% url 'register' %}{% endif %}">{% if user.is_authenticated %}Заявка на ZXC{% else %}Зарегистрироваться{% endif %} <span aria-hidden="true">↗</span></a>
-      <a class="zxc-secondary" href="#zxc-info">О дуэлях <span aria-hidden="true">↓</span></a>
-    </div>
+  <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="spark" viewBox="0 0 100 100">
+      <path fill="currentColor" d="M50 0 58 39 100 50 58 59 50 100 41 59 0 50 41 39Z"/>
+    </symbol>
+    <symbol id="arrow" viewBox="0 0 32 32">
+      <path fill="none" stroke="currentColor" stroke-width="2.5" d="M3 16h24M17 6l10 10-10 10"/>
+    </symbol>
+  </svg>
+<div class="zxc-shell">
+    <section class="hero" aria-labelledby="zxc-title">
+      <div class="poster-world" aria-hidden="true">
+        <div class="poster-archive"></div>
+        <div class="poster-cut"></div>
+        <div class="poster-rays"></div>
+        <svg class="poster-ring" viewBox="0 0 540 540">
+          <circle cx="270" cy="270" r="235"/>
+          <circle cx="270" cy="270" r="258" stroke-dasharray="2 9"/>
+          <path d="M270 0v60m0 420v60M0 270h60m420 0h60"/>
+        </svg>
+        <svg class="poster-star" aria-hidden="true"><use href="#spark"/></svg>
+        <div class="poster-figure"><video class="zxc-sf-video" autoplay loop muted playsinline preload="auto" aria-hidden="true"><source src="{% static 'assets/zxc-shadow-fiend-seamless.webm' %}" type="video/webm"></video></div>
+        <svg class="poster-star poster-star-small" aria-hidden="true"><use href="#spark"/></svg>
+      </div>
+      <div class="wrap hero-inner">
+        <div class="hero-copy">
+          <p class="event-type"><svg aria-hidden="true"><use href="#spark"/></svg> Solo Mid · Shadow Fiend · 1 vs 1</p>
+          <h1 id="zxc-title"><span>ZXC</span><span>Shadow Fiend</span></h1>
+          <p class="motto">Один мид. Два игрока.</p>
+          <a class="primary" href="{% if user.is_authenticated %}{% url 'zxc_application' %}{% else %}{% url 'register' %}?next={% url 'zxc_application' %}{% endif %}">{% if user.is_authenticated %}Подать заявку{% else %}Регистрация 1 vs 1{% endif %} <svg aria-hidden="true"><use href="#arrow"/></svg></a>
+          <p class="zxc-entry-status">{% if tournament_settings.zxc_applications_open %}Приём заявок открыт{% else %}Набор ещё не открыт{% endif %}</p>
+          <p class="zxc-entry-note">Бесплатно · Только жители России</p>
+          <p class="zxc-entry-note">Никаких тиммейтов. Дуэли на Shadow Fiend в рамках FRI.</p>
+        </div>
+      </div>
+      <div class="hero-edition wrap" aria-hidden="true"><span>FRI</span><svg><use href="#spark"/></svg></div>
+    </section>
+
+
+
+  <nav class="zxc-jump-nav" aria-label="Разделы турнира"><a href="#zxc-format">Правила ↗</a><a href="#zxc-prizes">Призы ↗</a><a href="#zxc-dates">Расписание ↗</a><a href="#zxc-sponsors">Спонсоры ↗</a></nav><div class="zxc-content">
+    <section class="paper zxc-terminal-section zxc-format" id="zxc-format" aria-labelledby="zxc-rules-title"><div class="zxc-section-index"><span>01 / ФОРМАТ</span><span>КАК ПОБЕДИТЬ</span></div><div class="zxc-format-grid"><div><p class="zxc-kicker">УСЛОВИЕ ПОБЕДЫ</p><h2 id="zxc-rules-title">Два пути к победе.</h2><p class="zxc-rule-copy">{% if tournament_settings.zxc_format %}{{ tournament_settings.zxc_format }}{% else %}Победа — снос вышки соперника или две его смерти. Играем один на один на Shadow Fiend.{% endif %}</p></div><div><div class="zxc-rule-terminal"><div class="zxc-windowbar"><span>Условия победы</span><span>1 VS 1</span></div><div class="zxc-rule-row"><span>01</span><strong>СНЕСТИ ВЫШКУ</strong><span>→ WIN</span></div><div class="zxc-rule-row"><span>02</span><strong>ДВЕ СМЕРТИ СОПЕРНИКА</strong><span>→ WIN</span></div><div class="zxc-rule-foot">HERO: NEVERMORE / MODE: MID 1×1</div></div></div></div><p class="zxc-stream-note"><span aria-hidden="true">✳</span> Последние 8 матчей пройдут на трансляции.</p></section>
+    <section class="paper zxc-terminal-section zxc-prize-section" id="zxc-prizes" aria-labelledby="zxc-prizes-title"><div class="zxc-section-index"><span>02 / НАГРАДА</span><span>ЗАБЕРИ СВОЁ</span></div><div class="zxc-prize-layout"><div><p class="zxc-kicker">ПРИЗЫ ZXC</p><h2 id="zxc-prizes-title">Призы за дуэли</h2><p class="zxc-rule-copy">{% if tournament_settings.zxc_prizes %}{{ tournament_settings.zxc_prizes }}{% else %}Победители получат игровые награды для Shadow Fiend и Dota Plus.{% endif %}</p></div><ol class="zxc-prizes"><li><span class="zxc-place">01</span><span><strong>Первое место</strong><small>Аркана на Shadow Fiend</small></span><span class="zxc-prize-mark" aria-hidden="true">✳</span></li><li><span class="zxc-place">02</span><span><strong>Второе место</strong><small>Дезоляторы на Shadow Fiend</small></span><span class="zxc-prize-mark" aria-hidden="true">✳</span></li><li><span class="zxc-place">03—05</span><span><strong>Третье — пятое места</strong><small>Dota Plus на месяц</small></span><span class="zxc-prize-mark" aria-hidden="true">✳</span></li></ol></div></section>
+    <section class="paper zxc-terminal-section zxc-dates" id="zxc-dates" aria-labelledby="zxc-dates-title"><div class="zxc-section-index"><span>03 / КАЛЕНДАРЬ</span><span>FRI 2026</span></div><h2 id="zxc-dates-title">Расписание</h2><div class="zxc-date-grid">{% if tournament_settings.registration_starts_on %}<div><span>01</span><p>СТАРТ ЗАЯВОК</p><strong>{{ tournament_settings.registration_starts_on|date:"j E Y" }}</strong></div>{% endif %}{% if tournament_settings.registration_ends_on %}<div><span>02</span><p>ЗАКРЫТИЕ НАБОРА</p><strong>{{ tournament_settings.registration_ends_on|date:"j E Y" }}</strong></div>{% endif %}{% if tournament_settings.bracket_ready_on %}<div><span>03</span><p>ГОТОВА СЕТКА</p><strong>{{ tournament_settings.bracket_ready_on|date:"j E Y" }}</strong></div>{% endif %}</div><p class="zxc-date-note">Точное расписание матчей объявим в <a href="{{ tournament_settings.telegram_url }}">Telegram</a> и <a href="{{ tournament_settings.discord_url }}">Discord</a>.</p></section>
+    <section class="paper zxc-terminal-section zxc-dates" id="zxc-sponsors" aria-labelledby="zxc-sponsors-title">
+      <h2 id="zxc-sponsors-title">Спонсоры</h2>
+      <p class="zxc-date-note">Партнёров дуэльного турнира объявим здесь.</p>
+    </section>
+    <section class="zxc-final-cta"><span class="zxc-kicker">FRI / ZXC / 1 × 1</span><h2>{% if tournament_settings.zxc_applications_open %}Твой выход.{% else %}Следи за сигналом.{% endif %}</h2>{% if tournament_settings.zxc_applications_open %}<a class="primary" href="{% if user.is_authenticated %}{% url 'zxc_application' %}{% else %}{% url 'register' %}?next={% url 'zxc_application' %}{% endif %}">ПОДАТЬ ЗАЯВКУ <span aria-hidden="true">↗</span></a>{% else %}<a class="primary" href="{{ tournament_settings.telegram_url }}">TELEGRAM FRI <span aria-hidden="true">↗</span></a>{% endif %}</section>
   </div>
-  <div class="zxc-index wrap" aria-hidden="true"><span>FRI / ZXC</span><span>01 × 01</span></div>
-</section>
-<section class="zxc-info" id="zxc-info" aria-labelledby="zxc-info-title">
-  <div class="zxc-info-inner wrap">
-    <svg class="zxc-sigil" width="64" height="98" viewBox="0 0 64 98" fill="none" aria-hidden="true" focusable="false">
-      <path d="M32 2 37 37 62 49 37 61 32 96 27 61 2 49 27 37Z" stroke="currentColor"/>
-      <path d="M32 16v66M13 49h38M32 31l13 18-13 18-13-18Z" stroke="currentColor"/>
-      <circle cx="32" cy="49" r="3" fill="currentColor"/>
-    </svg>
-    <div><p class="zxc-kicker">ПЕРЕД ДУЭЛЬЮ</p><h2 id="zxc-info-title">{% if tournament_settings.zxc_applications_open %}Приём заявок открыт{% else %}Набор ещё не открыт{% endif %}</h2><p>Участие бесплатное, для жителей России. Можно играть и здесь, и в командном турнире. Начало набора объявим в <a href="{{ tournament_settings.telegram_url }}">Telegram FRI</a>.</p></div>
-    <a class="zxc-secondary zxc-back" href="{% url 'home' %}"><span aria-hidden="true">←</span> На главную FRI</a>
-  </div>
-</section>
-<section class="zxc-details wrap" aria-labelledby="zxc-rules-title">
-  <div><p class="zxc-kicker">SHADOW FIEND ONLY</p><h2 id="zxc-rules-title">Одна вышка.<br>Или две смерти.</h2>{% if tournament_settings.zxc_format %}<p class="zxc-rule-copy">{{ tournament_settings.zxc_format }}</p>{% else %}<p class="zxc-rule-copy">Побеждает тот, кто первым снесёт вышку соперника или убьёт его дважды. Последние 8 матчей покажем на трансляции.</p>{% endif %}<p class="zxc-rule-copy">Расписание появится в Telegram и Discord.</p></div>
-  <div class="zxc-prizes"><p class="zxc-kicker">ПРИЗЫ</p><h2>Забери своё</h2>{% if tournament_settings.zxc_prizes %}<p class="zxc-prize-copy">{{ tournament_settings.zxc_prizes }}</p>{% else %}<ol><li><strong>1 место</strong> Аркана на Shadow Fiend</li><li><strong>2 место</strong> Дезоляторы на Shadow Fiend</li><li><strong>3–5 места</strong> Dota Plus на месяц</li></ol>{% endif %}</div>
-</section>
-<div class="wrap">{% include 'registration_dates.html' %}</div>
+</div>
 {% endblock %}

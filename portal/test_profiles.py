@@ -8,6 +8,47 @@ User = get_user_model()
 
 
 class ProfileTests(TestCase):
+    def test_account_flow_pages_use_designed_surfaces(self):
+        response = self.client.get(reverse('register'))
+        self.assertContains(response, 'flow.css')
+        self.client.force_login(self.user)
+        for route in ('application', 'zxc_application'):
+            response = self.client.get(reverse(route))
+            self.assertContains(response, 'application-layout')
+            self.assertContains(response, 'application-guide')
+            self.assertContains(response, 'flow.css')
+        response = self.client.get(reverse('support:index'))
+        self.assertContains(response, 'support.css')
+
+    def test_dashboard_status_badges_and_contextual_actions(self):
+        from .models import TournamentApplication
+        self.client.force_login(self.user)
+        application = TournamentApplication.objects.create(
+            user=self.user, nickname='Player', steam_url='https://steamcommunity.com/id/player_test/')
+        for status in ('pending', 'accepted', 'rejected'):
+            application.status = status
+            application.save()
+            response = self.client.get(reverse('profile'))
+            self.assertContains(response, 'class="application-badge"')
+            self.assertContains(response, f'data-status="{status}"')
+            self.assertContains(response, reverse('application'))
+            self.assertNotContains(response, 'player-shortcuts')
+            self.assertContains(response, reverse('profile_edit'))
+            self.assertContains(response, reverse('support:index'))
+
+    def test_equipment_answers_are_required_validated_and_saved(self):
+        user = User.objects.create_user('equipment@example.com', 'StrongPassword-245!')
+        self.client.force_login(user)
+        self.assertRedirects(self.client.post(reverse('profile_edit'), {'microphone': 'yes', 'webcam': 'no'}), reverse('profile'))
+        user.refresh_from_db()
+        self.assertEqual(user.microphone, 'yes')
+        self.assertEqual(user.webcam, 'no')
+        response = self.client.get(reverse('profile_edit'))
+        self.assertEqual(response.context['form']['microphone'].value(), 'yes')
+        self.assertFalse(ProfileForm(data={'microphone': 'unexpected'}, instance=user).is_valid())
+        self.assertFalse(ProfileForm(data={}, instance=user).is_valid())
+        self.assertContains(self.client.get(reverse('profile')), 'Веб-камера')
+
     def setUp(self):
         self.user = User.objects.create_user('player@example.com', 'StrongPassword-245!')
 
@@ -19,7 +60,7 @@ class ProfileTests(TestCase):
     def test_save_only_own_profile_fields(self):
         other = User.objects.create_user('other@example.com', 'StrongPassword-245!')
         self.client.force_login(self.user)
-        response = self.client.post(reverse('profile_edit'), {'nickname': 'Игрок', 'telegram': '@player_test', 'steam_url': 'https://steamcommunity.com/id/player_test/', 'mmr': '4500', 'position': '2', 'id': other.pk, 'email': 'changed@example.com', 'is_staff': True, 'is_superuser': True, 'groups': [Group.objects.get(name='Сотрудники').pk]})
+        response = self.client.post(reverse('profile_edit'), {'microphone': 'yes', 'webcam': 'no', 'nickname': 'Игрок', 'telegram': '@player_test', 'steam_url': 'https://steamcommunity.com/id/player_test/', 'mmr': '4500', 'position': '2', 'id': other.pk, 'email': 'changed@example.com', 'is_staff': True, 'is_superuser': True, 'groups': [Group.objects.get(name='Сотрудники').pk]})
         self.assertRedirects(response, reverse('profile'))
         self.user.refresh_from_db()
         other.refresh_from_db()
@@ -32,21 +73,29 @@ class ProfileTests(TestCase):
         self.assertEqual(other.nickname, '')
 
     def test_optional_fields_can_be_left_empty(self):
-        form = ProfileForm(data={}, instance=self.user)
+        form = ProfileForm(data={'microphone': 'no', 'webcam': 'no'}, instance=self.user)
         self.assertTrue(form.is_valid(), form.errors)
         form.save()
         self.user.refresh_from_db()
         self.assertIsNone(self.user.mmr)
 
-    def test_discord_and_team_name_are_optional_but_bounded(self):
-        form = ProfileForm(data={'discord': 'my.discord', 'team_name': 'Team Example'}, instance=self.user)
+    def test_team_name_is_staff_owned_and_equipment_cannot_be_skipped(self):
+        self.user.team_name = 'Assigned by staff'
+        self.user.save()
+        form = ProfileForm(data={'discord': 'my.discord', 'team_name': 'Player override', 'microphone': 'no', 'webcam': 'yes'}, instance=self.user)
+        self.assertNotIn('team_name', form.fields)
         self.assertTrue(form.is_valid(), form.errors)
         form.save()
         self.user.refresh_from_db()
+        self.assertEqual(self.user.team_name, 'Assigned by staff')
         self.assertEqual(self.user.discord, 'my.discord')
-        self.assertEqual(self.user.team_name, 'Team Example')
-        self.assertFalse(ProfileForm(data={'discord': 'x' * 81}, instance=self.user).is_valid())
-        self.assertFalse(ProfileForm(data={'team_name': 'x' * 101}, instance=self.user).is_valid())
+        for data in ({}, {'microphone': 'yes'}, {'webcam': 'no'}, {'microphone': 'invalid', 'webcam': 'yes'}):
+            self.assertFalse(ProfileForm(data=data, instance=self.user).is_valid())
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('profile_edit'), {'microphone': 'yes'})
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('webcam', response.context['form'].errors)
+        self.assertNotContains(response, 'name="team_name"')
 
     def test_invalid_profile_fields(self):
         for data in ({'telegram': 'bad!'}, {'mmr': '-1'}, {'mmr': '20001'}, {'position': '9'}):
@@ -55,7 +104,7 @@ class ProfileTests(TestCase):
             self.assertFalse(ProfileForm(data={'steam_url': url}, instance=self.user).is_valid(), url)
 
     def test_register_enters_optional_second_step_and_group(self):
-        response = self.client.post(reverse('register'), {'email': 'new@example.com', 'password1': 'StrongPassword-245!', 'password2': 'StrongPassword-245!'})
+        response = self.client.post(reverse('register'), {'email': 'new@example.com', 'password1': 'StrongPassword-245!', 'password2': 'StrongPassword-245!', 'privacy_consent': 'on'})
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response.url, reverse('profile_edit'))
         user = User.objects.get(email='new@example.com')

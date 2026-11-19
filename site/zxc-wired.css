@@ -1,0 +1,80 @@
+/* Wired-era ZXC skin: dithered black, rose scanlines, narrow central column. */
+.zxc-page{
+  --zxc-black:#030305;--zxc-bone:#e8dfc2;--zxc-red:#df7694;--zxc-muted:#a8959b;--zxc-rule:#c66e885c;
+  background-color:#030305;color:var(--zxc-bone);
+  background-image:url("assets/zxc-eye-tile.svg"),repeating-linear-gradient(0deg,#09070b 0 3px,#1a101a 4px,#0a080d 5px,#070609 7px);
+  background-size:42px 32px,100% 8px;background-repeat:repeat,repeat;background-attachment:fixed;
+}
+.zxc-page .wrap,.zxc-shell{width:min(1160px,calc(100% - 36px));max-width:1160px;margin-inline:auto}
+.zxc-page .app-header.wrap,.zxc-page .app-footer.wrap{background:#030305;padding-inline:clamp(14px,2vw,26px)}
+.zxc-page .app-header.wrap{border-bottom:1px solid var(--zxc-rule)}
+.zxc-page .app-footer.wrap{border-top:1px solid var(--zxc-rule)}
+.zxc-shell{position:relative;padding:0 16px;background:#030305;border-inline:1px solid #c66e886c;box-shadow:0 0 40px #000b}
+.zxc-terminal-nav{position:relative;z-index:1;background:#030305;border:0;border-bottom:1px solid var(--zxc-rule);border-top:1px dotted var(--zxc-rule);padding-inline:clamp(12px,2vw,24px)}
+.zxc-terminal-nav>div{flex-wrap:wrap;justify-content:center}
+.zxc-terminal-nav a{font-family:var(--sans);letter-spacing:.1em}
+.zxc-terminal-nav a:hover,.zxc-terminal-nav a:focus-visible{color:#f2aac0;text-shadow:0 0 10px #f05b7955}
+.zxc-hero{min-height:clamp(590px,64vw,790px);border:0;border-bottom:1px solid var(--zxc-rule);background:#020204}
+.zxc-art{object-position:72% center;filter:contrast(1.08) saturate(.9)}
+.zxc-hero::after{background:repeating-linear-gradient(0deg,#0002 0 1px,transparent 1px 4px),linear-gradient(90deg,#030305 0%,#030305e8 30%,#03030570 62%,#03030520 100%),linear-gradient(0deg,#030305 0%,transparent 32%)}
+.zxc-hero-inner{padding-inline:clamp(18px,4vw,58px)}
+.zxc-screenline,.zxc-section-index{color:#d4bdba;font-family:"Courier New",monospace;letter-spacing:.18em;text-transform:uppercase}
+.zxc-kicker{color:#e98aa5;text-transform:uppercase}
+.zxc-hero h1{font-family:"Times New Roman",serif;font-weight:600;letter-spacing:-.06em;text-shadow:3px 4px #671c36,0 0 30px #000}
+.zxc-title-sub{font-family:var(--sans);letter-spacing:.34em;color:#e87e9c}
+.zxc-tagline{font-family:"Times New Roman",serif;font-weight:700;letter-spacing:.01em}
+.zxc-intro,.zxc-rule-copy,.zxc-date-note{color:#d0c4bb;line-height:1.85;letter-spacing:.025em}
+.zxc-hero-cta{min-width:min(310px,100%)}
+.zxc-button{background:#080609;color:#f0cbd2;border:1px solid #d97b98;text-transform:uppercase;letter-spacing:.15em}
+.zxc-button:hover{background:#d97b98;color:#10070a}
+.zxc-coordinate{color:#d5a7b3;opacity:.72}
+.zxc-ticker{background:#020204;border:0;border-top:1px dotted var(--zxc-rule);border-bottom:1px solid var(--zxc-rule);color:#dfc9bf;letter-spacing:.2em}
+.zxc-ticker i{color:#eb799b}
+.zxc-content{width:100%;max-width:none}
+.zxc-terminal-section{padding:clamp(48px,6vw,78px) clamp(18px,4vw,54px);border-bottom:1px dotted #c66e8875;background:#030305}
+.zxc-section-index{border-bottom:1px dotted var(--zxc-rule);font-size:9px}
+.zxc-format-grid,.zxc-prize-layout{gap:clamp(28px,5vw,72px);padding-top:clamp(28px,4vw,48px)}
+.zxc-format h2,.zxc-prize-layout h2,.zxc-dates h2,.zxc-final-cta h2{font-family:"Times New Roman",serif;font-weight:600;letter-spacing:.12em;text-transform:uppercase}
+.zxc-format h2 em,.zxc-prize-layout h2 em{color:#e88ba5}
+.zxc-rule-copy{max-width:54ch}
+.zxc-rule-terminal{background:#050507;border:1px dotted #d17a96;box-shadow:none}
+.zxc-windowbar{border-bottom:1px dotted var(--zxc-rule);color:#d7aebe;letter-spacing:.12em}
+.zxc-rule-row{border-bottom:1px dotted #c66e8848;letter-spacing:.07em}
+.zxc-rule-row>span:first-child,.zxc-rule-row>span:last-child{color:#ed8ca7}
+.zxc-rule-foot{color:#bd9ea7;letter-spacing:.12em}
+.zxc-stream-note{background:#080609;border-left:1px dotted #e77f9c;color:#d7c7c0;letter-spacing:.03em}
+.zxc-prizes{border-top:1px dotted var(--zxc-rule)}
+.zxc-prizes li{border-bottom:1px dotted var(--zxc-rule);min-height:92px}
+.zxc-place,.zxc-prize-mark{color:#ec89a5}
+.zxc-prizes li strong{font-family:"Times New Roman",serif;font-size:18px;letter-spacing:.05em}
+.zxc-prizes li small{color:#d0bdb9;letter-spacing:.03em}
+.zxc-prizes li:first-child{background:#080609;border:1px dotted #df7694;box-shadow:inset 3px 0 #df7694}
+.zxc-prizes li:first-child::after{color:#eca0b4}
+.zxc-date-grid{border:1px dotted var(--zxc-rule)}
+.zxc-date-grid>div{border-right:1px dotted var(--zxc-rule);background:#050507}
+.zxc-date-grid>div:last-child{border:0}
+.zxc-date-grid p{color:#d4a9b4;letter-spacing:.15em}
+.zxc-date-grid strong{font-family:"Times New Roman",serif;letter-spacing:.06em}
+.zxc-final-cta{margin:clamp(32px,5vw,64px) 0;padding:clamp(26px,4vw,48px);border:1px dotted #d07895;background:#050507}
+.zxc-final-cta h2{letter-spacing:.08em}
+.zxc-shell::before,.zxc-shell::after{position:fixed;top:42vh;z-index:2;pointer-events:none;writing-mode:vertical-rl;color:#f08ca044;font:700 9px/1 var(--sans);letter-spacing:.24em}
+.zxc-shell::before{content:"WIRED / 01 / SIGNAL";left:clamp(4px,.8vw,18px)}
+.zxc-shell::after{content:"ZXC / LOVE / WIRED";right:clamp(4px,.8vw,18px);transform:rotate(180deg)}
+.zxc-page :focus-visible{outline:2px solid #efa4b7;outline-offset:4px}
+@media(max-width:700px){
+  .zxc-page .wrap,.zxc-shell{width:calc(100% - 20px)}
+  .zxc-shell{padding-inline:10px}
+  .zxc-page .app-header.wrap,.zxc-page .app-footer.wrap{padding-inline:12px}
+  .zxc-terminal-nav>div{flex-wrap:wrap;justify-content:space-between;gap:4px 12px}
+  .zxc-terminal-nav>div a{font-size:11px;letter-spacing:.02em;min-height:44px;display:inline-flex;align-items:center}
+  .zxc-art{object-position:74% center}
+  .zxc-hero::after{background:repeating-linear-gradient(0deg,#0002 0 1px,transparent 1px 4px),linear-gradient(90deg,#030305 0%,#030305e8 32%,#03030562 70%,#03030520 100%),linear-gradient(0deg,#030305 0%,#030305bb 35%,transparent 75%)}
+  .zxc-hero-inner{padding:18px 16px 28px}
+  .zxc-title-sub{letter-spacing:.22em}
+  .zxc-terminal-section{padding:42px 14px}
+  .zxc-format-grid,.zxc-prize-layout{grid-template-columns:1fr;gap:24px;padding-top:28px}
+  .zxc-date-grid{grid-template-columns:1fr}
+  .zxc-date-grid>div{border-right:0;border-bottom:1px dotted var(--zxc-rule)}
+  .zxc-date-grid>div:last-child{border:0}
+  .zxc-shell::before,.zxc-shell::after{display:none}
+}

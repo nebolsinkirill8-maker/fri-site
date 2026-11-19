@@ -6,6 +6,8 @@ from django.utils import timezone
 from django.views.decorators.cache import never_cache
 from django.views.decorators.http import require_http_methods
 
+from portal import ratelimit
+
 from .forms import ReplyForm, TicketForm
 from .models import Ticket
 
@@ -15,15 +17,21 @@ from .models import Ticket
 @require_http_methods(['GET', 'POST'])
 def index(request):
     form = TicketForm(request.POST if request.method == 'POST' else None)
-    if request.method == 'POST' and form.is_valid():
+    status = 200
+    if request.method == 'POST' and ratelimit.is_limited('ticket-user', request.user.pk, ratelimit.TICKETS_PER_USER):
+        form.is_valid()
+        form.add_error(None, ratelimit.TICKETS_LOCKED_MESSAGE)
+        status = 429
+    elif request.method == 'POST' and form.is_valid():
         with transaction.atomic():
             ticket = form.save(commit=False)
             ticket.owner = request.user
             ticket.save()
             ticket.messages.create(author=request.user, body=form.cleaned_data['body'])
+        ratelimit.hit('ticket-user', request.user.pk, ratelimit.TICKETS_PER_USER)
         return redirect('support:detail', pk=ticket.pk)
     tickets = Paginator(Ticket.objects.filter(owner=request.user), 20).get_page(request.GET.get('page'))
-    return render(request, 'support/index.html', {'form': form, 'tickets': tickets})
+    return render(request, 'support/index.html', {'form': form, 'tickets': tickets}, status=status)
 
 
 @never_cache

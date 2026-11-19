@@ -1,0 +1,4 @@
+{% extends 'base.html' %}
+{% block site_header %}<header class="app-header wrap"><a class="app-brand" href="{% url 'home' %}" aria-label="Главная FRI">FRI ✦</a></header>{% endblock %}
+{% block main_class %}fri-cabinet wrap{% endblock %}
+{% block before_content %}{% include 'partials/cabinet_navigation.html' %}{% endblock %}

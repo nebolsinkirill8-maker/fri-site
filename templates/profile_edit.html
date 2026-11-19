@@ -1,5 +1,36 @@
-{% extends 'base.html' %}
+{% extends 'cabinet.html' %}
+{% load static %}
 {% block title %}Игровой профиль — FRI{% endblock %}
+{% block page_class %} profile-editor-page{% endblock %}
+{% block page_head %}<link rel="stylesheet" href="{% static 'profile-editor.css' %}?v=20261113-1"><link rel="stylesheet" href="{% static 'profile-photo.css' %}"><script src="{% static 'profile-photo.js' %}" defer></script><script src="{% static 'flow.js' %}" defer></script>{% endblock %}
 {% block content %}
-<section class="account-shell wrap"><p class="eyebrow">FRI / ШАГ 02</p><h1>Расскажи о себе</h1><p>Аккаунт уже создан. Все поля необязательные — можешь заполнить их сейчас или вернуться позднее.</p><form class="account-form" method="post">{% csrf_token %}{{ form.as_p }}<button class="primary" type="submit">Сохранить профиль ↗</button></form><p><a href="{% url 'profile' %}">Заполнить позднее / к профилю</a></p><p class="quiet">Это не заявка на участие. Данные доступны тебе и организаторам.</p></section>
+<section class="profile-editor wrap" aria-labelledby="editor-title">
+  <header class="editor-heading"><div><p class="eyebrow">FRI / НАСТРОЙКИ ИГРОКА</p><h1 id="editor-title">Твой игровой профиль<span aria-hidden="true">.</span></h1><p>Заполни сейчас или вернись позже. Изменения сохранятся только по кнопке.</p></div><a href="{% url 'profile' %}">← В личный кабинет</a></header>
+  <div class="editor-layout">
+    <form class="editor-form" method="post" enctype="multipart/form-data">
+      {% csrf_token %}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      {% include 'partials/form_errors.html' %}
+      {% include 'partials/profile_photo.html' %}
+      <fieldset><legend><span>01</span> Игровые данные</legend><div class="editor-fields">
+        {% include 'partials/profile_field.html' with field=form.nickname %}
+        {% include 'partials/profile_field.html' with field=form.steam_url full=True %}
+        {% include 'partials/profile_field.html' with field=form.mmr %}
+        {% include 'partials/profile_field.html' with field=form.position %}
+      </div></fieldset>
+      <fieldset><legend><span>02</span> Для связи</legend><div class="editor-fields">
+        {% include 'partials/profile_field.html' with field=form.telegram %}
+        {% include 'partials/profile_field.html' with field=form.discord %}
+      </div></fieldset>
+      <fieldset><legend><span>03</span> Оборудование</legend><p class="editor-section-note">Есть ли у тебя рабочий микрофон и веб-камера? Выбери «Да» или «Нет» для каждого устройства. Оба вопроса обязательны.</p><div class="editor-fields">
+        {% include 'partials/profile_field.html' with field=form.microphone %}
+        {% include 'partials/profile_field.html' with field=form.webcam %}
+      </div><p class="editor-help">Это только информация для организаторов. Сайт не включает устройства и не запрашивает к ним доступ.</p></fieldset>
+      <div class="editor-save"><button class="primary" type="submit">Сохранить профиль <span aria-hidden="true">↗</span></button><a href="{% url 'profile' %}">Вернуться без сохранения</a></div>
+    </form>
+    <aside class="editor-guide" aria-labelledby="editor-guide-title">
+      <div class="editor-print" aria-hidden="true"><span>FRI / PLAYER FILE</span><svg viewBox="0 0 200 180" fill="none"><circle cx="100" cy="90" r="65" stroke="currentColor" stroke-width="1"/><circle cx="100" cy="90" r="79" stroke="currentColor" stroke-dasharray="2 7"/><path d="M100 4 109 72 190 90 109 108 100 176 91 108 10 90 91 72Z" fill="currentColor"/><path d="M20 12h30M150 168h30M22 4v16M178 160v16" stroke="currentColor"/></svg><strong>ИГРОВОЙ<br>ПРОФИЛЬ</strong></div>
+      <h2 id="editor-guide-title">Перед заявкой</h2><p>Для заявки нужны никнейм, Steam, Telegram и Discord. В профиле также нужно ответить на вопросы о микрофоне и веб-камере.</p><p>Названия команд назначают организаторы. Каждый участник подаёт свою заявку.</p><div class="editor-guide-note">Профиль не заменяет заявку на турнир. Отправить её можно из личного кабинета, когда открыт набор.</div><a href="{% url 'support:index' %}">Есть вопрос? Поддержка ↗</a>
+    </aside>
+  </div>
+</section>
 {% endblock %}

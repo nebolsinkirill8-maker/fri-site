@@ -1,0 +1,71 @@
+/* ZXC poster: white paper, Nevermore, black botanical margins. */
+.zxc-page {
+  color-scheme: light;
+  background: #fff;
+  color: #161416;
+  --zxc-line: #d7d3d4;
+  --zxc-accent: #831d33;
+}
+.zxc-page .app-header, .zxc-page .app-footer { color: #161416; border-color: var(--zxc-line); }
+.zxc-page .app-header { padding-block: 14px; }
+.zxc-page .app-brand { color: #161416; }
+.zxc-shell { width: min(1200px, calc(100% - 48px)); margin: auto; }
+.zxc-terminal-nav { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; border-block: 1px solid #161416; font: 12px/1.5 monospace; }
+.zxc-terminal-nav > div { display: flex; flex-wrap: wrap; gap: 20px; }
+.zxc-terminal-nav a { display: inline-flex; align-items: center; min-height: 44px; text-decoration: none; }
+.zxc-terminal-nav a:hover { color: var(--zxc-accent); }
+.duel-poster { position: relative; isolation: isolate; padding-top: 30px; }
+.duel-poster::before, .duel-poster::after {
+  content: ""; position: absolute; z-index: -1; top: 5%; bottom: 18%; width: 26%;
+  background: url("assets/zxc-botanical.png") center / contain no-repeat;
+  filter: grayscale(1) contrast(1.4); mix-blend-mode: multiply; pointer-events: none;
+}
+.duel-poster::before { left: -3%; transform: rotate(-12deg); }
+.duel-poster::after { right: -3%; transform: scaleX(-1) rotate(-12deg); }
+.duel-eyebrow { text-align: center; font: 12px/1.5 monospace; letter-spacing: .2em; }
+.duel-stage { position: relative; height: clamp(370px, 46vw, 610px); display: grid; place-items: center; }
+.duel-stage h1 { position: absolute; top: 0; font: 900 clamp(130px, 24vw, 320px)/.9 var(--sans); letter-spacing: -.095em; padding-right: .095em; }
+.duel-fiend { position: absolute; bottom: 0; width: clamp(280px, 37vw, 480px); height: auto; mix-blend-mode: multiply; }
+.duel-side { position: absolute; top: 45%; writing-mode: vertical-rl; font: 12px/1 monospace; letter-spacing: .25em; }
+.duel-side-left { left: 24%; transform: rotate(180deg); }
+.duel-side-right { right: 24%; }
+.duel-bottom { border-block: 1px solid #161416; padding: 26px 0; display: grid; grid-template-columns: 1fr 340px; align-items: center; gap: 32px; }
+.duel-label, .zxc-kicker { font: 12px/1.5 monospace; letter-spacing: .1em; color: var(--zxc-accent); margin-bottom: 12px; }
+.duel-bottom h2 { font-size: clamp(24px, 3vw, 40px); letter-spacing: -.05em; margin-bottom: 8px; }
+.duel-bottom p, .zxc-rule-copy, .zxc-date-note { line-height: 1.7; }
+.duel-status { font-size: 13px; margin-bottom: 8px; }
+.duel-fine { margin-top: 10px; font-size: 12px; color: #555; }
+.zxc-button { min-height: 52px; padding: 14px 18px; display: flex; justify-content: space-between; gap: 20px; background: #171517; color: white; text-decoration: none; font-weight: 700; }
+.zxc-button:hover { background: var(--zxc-accent); }
+.zxc-terminal-section { padding: 64px 0; border-bottom: 1px solid var(--zxc-line); scroll-margin-top: 20px; }
+.zxc-section-index { display: flex; justify-content: space-between; gap: 12px; font: 11px/1.5 monospace; color: #666; margin-bottom: 26px; }
+.zxc-format-grid, .zxc-prize-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 70px; }
+.zxc-content h2 { font: 700 clamp(30px, 4vw, 52px)/1.1 var(--sans); letter-spacing: -.05em; margin-bottom: 22px; text-wrap: balance; }
+.zxc-rule-copy { max-width: 60ch; }
+.zxc-rule-terminal { border: 1px solid #161416; padding: 0 20px; }
+.zxc-windowbar { display: flex; justify-content: space-between; border-bottom: 1px solid var(--zxc-line); padding-block: 14px; font: 12px/1.5 monospace; }
+.zxc-rule-row { display: grid; grid-template-columns: 24px 1fr auto; gap: 12px; align-items: center; padding-block: 22px; border-bottom: 1px solid var(--zxc-line); font-size: 13px; }
+.zxc-rule-foot { padding-block: 14px; font: 11px/1.5 monospace; }
+.zxc-stream-note { margin-top: 24px; font-size: 14px; }
+.zxc-prizes { list-style: none; padding: 0; }
+.zxc-prizes li { display: grid; grid-template-columns: 66px 1fr; padding: 20px 0; border-bottom: 1px solid var(--zxc-line); gap: 16px; }
+.zxc-prizes li:first-child { border-top: 2px solid #161416; }
+.zxc-place { font: italic 32px/1.2 Georgia,serif; }
+.zxc-prizes small { display: block; font-size: 14px; margin-top: 6px; }
+.zxc-prize-mark { display: none; }
+.zxc-date-grid { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 20px; }
+.zxc-date-grid > div { border-left: 2px solid #161416; padding-left: 16px; }
+.zxc-date-grid > div > span { display: none; }
+.zxc-date-grid p { font: 12px/1.5 monospace; margin-bottom: 8px; }
+.zxc-final-cta { padding-block: 64px; }
+.zxc-final-cta .zxc-button { max-width: 360px; }
+.zxc-page :focus-visible { outline: 3px solid var(--zxc-accent); outline-offset: 4px; }
+@media(max-width:760px) {
+  .zxc-shell { width: calc(100% - 32px); }
+  .zxc-terminal-nav > div { order: 3; width: 100%; justify-content: space-between; gap: 4px; border-top: 1px solid var(--zxc-line); }
+  .zxc-terminal-nav > div a { font-size: 10px; }
+  .duel-bottom, .zxc-format-grid, .zxc-prize-layout { grid-template-columns: minmax(0,1fr); gap: 28px; }
+  .duel-side-left { left: 4%; } .duel-side-right { right: 4%; }
+  .duel-poster::before, .duel-poster::after { width: 30%; top: 30px; bottom: 45%; opacity: .65; }
+  .zxc-terminal-section { padding-block: 40px; }
+}

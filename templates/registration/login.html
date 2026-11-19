@@ -1,3 +1,19 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}Вход — FRI{% endblock %}
-{% block content %}<section class="account-shell wrap"><p class="eyebrow">FRI / АККАУНТ</p><h1>С возвращением</h1><form class="account-form" method="post">{% csrf_token %}{{ form.as_p }}{% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}<button class="primary" type="submit">Войти ↗</button></form><p>Нет аккаунта? <a href="{% url 'register' %}">Зарегистрироваться</a></p></section>{% endblock %}
+{% block content %}
+<section class="login-stage" aria-labelledby="login-title">
+  <div class="login-sheet">
+    <div class="login-sheet-top"><span>FRI / ЛИЧНЫЙ КАБИНЕТ</span><img src="{% static 'assets/mark.svg' %}" width="25" height="25" alt=""></div>
+    <h1 id="login-title">С возвращением<span class="login-dot" aria-hidden="true">.</span></h1>
+    <p class="login-description">Войди по почте и паролю от аккаунта FRI.</p>
+    <form class="account-form login-form" method="post" action="{% url 'login' %}">
+      {% csrf_token %}{{ form.as_p }}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      <button class="primary" type="submit">Войти в аккаунт <span aria-hidden="true">↗</span></button>
+    </form>
+    <div class="login-register"><span>Первый раз здесь?</span><a href="{% url 'register' %}{% if next %}?next={{ next|urlencode }}{% endif %}">Создать аккаунт ↗</a></div>
+    <a class="login-back" href="{% url 'home' %}">← На главную FRI</a>
+  </div>
+</section>
+{% endblock %}

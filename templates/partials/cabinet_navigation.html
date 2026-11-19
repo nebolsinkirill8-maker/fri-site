@@ -1,0 +1,14 @@
+<div class="fri-cabinet-nav">
+  <details open>
+    <summary>Навигация FRI</summary>
+    <nav aria-label="Личный кабинет">
+      <a href="{% url 'home' %}">Главная</a>
+      <a href="{% url 'profile' %}">Мой профиль</a>
+      <a href="{% url 'tournament' %}">Командный турнир</a>
+      <a href="{% url 'zxc' %}">ZXC 1 vs 1</a>
+      {% if fri_accepted %}<a href="{% url 'profile' %}#esports">Киберспорт</a>{% endif %}
+      <a href="{% url 'support:index' %}">Поддержка</a>
+      <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button type="submit">Выйти</button></form>
+    </nav>
+  </details>
+</div>

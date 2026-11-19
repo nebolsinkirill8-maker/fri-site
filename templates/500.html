@@ -1,0 +1,23 @@
+{% load static %}{# Rendered without request context: no database access, URL reversing or context processors. #}<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#160910">
+  <title>Ошибка сервера — FRI</title>
+  <link rel="icon" href="{% static 'assets/mark.svg' %}" type="image/svg+xml">
+  <link rel="stylesheet" href="{% static 'style.css' %}">
+  <link rel="stylesheet" href="{% static 'app.css' %}">
+  <link rel="stylesheet" href="{% static 'legal.css' %}">
+</head>
+<body class="app-page">
+  <header class="app-header wrap"><a class="app-brand" href="/" aria-label="FRI — главная">FRI ✦</a></header>
+  <main id="main">
+    <section class="account-shell wrap error-page" aria-labelledby="error-title">
+      <p class="error-code" aria-hidden="true">500</p>
+      <h1 id="error-title">Что-то сломалось на нашей стороне</h1>
+      <p>Мы уже разбираемся. Обнови страницу через пару минут. Если ошибка повторяется, напиши организаторам в <a href="https://t.me/firstrussianinternational">Telegram FRI</a>.</p>
+      <a class="primary" href="/">На главную FRI ↗</a>
+    </section>
+  </main>
+</body>
+</html>

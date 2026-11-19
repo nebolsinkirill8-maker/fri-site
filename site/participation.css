@@ -1,0 +1,23 @@
+/* Process-card layout adapted from 21st.dev/chamaac/how-it-works to native Django HTML/CSS. */
+.participation{padding:clamp(64px,7vw,112px) 0;position:relative}
+.participation .participation-inner{max-width:1420px;text-align:left;display:grid;grid-template-columns:1fr auto;gap:24px 40px}
+.participation-status{grid-column:1/-1;margin:0!important;font-size:14px!important;color:#75223f}
+.participation #participation-title{font-size:clamp(42px,6vw,88px);line-height:1.03;letter-spacing:-.055em;margin:0;grid-column:1}
+.participation .participation-lead{grid-column:1;max-width:62ch;font-size:18px;line-height:1.65;margin:0}
+.participation .participation-steps{grid-column:1/-1;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;margin:22px 0 8px;position:relative}
+.participation-step{background:#fff4e9;border:1px solid #8f174144;border-top:4px solid #8f1741;padding:clamp(24px,3vw,40px);box-shadow:5px 6px 0 #65203c16;position:relative;transition:transform 180ms ease}
+.participation-step:nth-child(2){background:#ffe0e8;border-top-color:#ff507f}
+.participation-step .step-number{font:800 12px/1.5 var(--sans);letter-spacing:.14em;color:#8f1741;display:block;margin-bottom:30px}
+.participation-step h3{font-size:clamp(24px,2.5vw,34px);line-height:1.12;letter-spacing:-.035em;margin:0 0 18px}
+.participation .participation-step p{font-size:16px;line-height:1.75;margin:0;color:#482337;max-width:46ch}
+.participation .participation-note{grid-column:1;align-self:center;font-size:15px;line-height:1.6;border-left:3px solid #8f1741;padding-left:18px;margin:0;max-width:62ch;color:#65203c}
+.participation .participation-steps{grid-row:4}
+.participation .participation-note{grid-row:5}
+.participation .primary{grid-column:2;grid-row:5;align-self:center;margin:0;min-height:52px}
+.participation a:focus-visible{outline:3px solid #65203c;outline-offset:7px}
+.participation .participation-status,.participation #participation-title,.participation .participation-lead{grid-column:1/-1;text-align:center;justify-self:center}
+.participation .participation-status{justify-content:center}
+.participation .participation-lead{margin-inline:auto}
+@media(hover:hover){.participation-step:hover{transform:translateY(-4px)}}
+@media(max-width:850px){.participation .participation-inner{display:block}.participation #participation-title{margin:20px 0}.participation .participation-steps{grid-template-columns:1fr;margin:30px 0}.participation-step .step-number{margin-bottom:16px}.participation .participation-note{margin:24px 0}.participation .primary{margin-top:12px}.participation .participation-lead{font-size:17px}}
+@media(prefers-reduced-motion:reduce){.participation-step{transition:none}.participation-step:hover{transform:none}}

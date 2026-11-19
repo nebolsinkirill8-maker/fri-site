@@ -68,7 +68,7 @@ class TournamentApplicationTests(TestCase):
     def test_duplicate_is_idempotent_and_profile_changes_do_not_modify_snapshot(self):
         item = self.submit(comment='Первое сообщение')
         self.assertRedirects(
-            self.client.post(reverse('profile_edit'), {'nickname': 'New nickname'}),
+            self.client.post(reverse('profile_edit'), {'nickname': 'New nickname', 'microphone': 'yes', 'webcam': 'no'}),
             reverse('profile'),
         )
         self.assertRedirects(self.client.post(self.url, {'comment': 'Замена'}), self.url)
@@ -102,9 +102,11 @@ class TournamentApplicationTests(TestCase):
     def test_required_declarations_and_contact_fields(self):
         self.open_intake()
         self.client.force_login(self.user)
-        for data in ({}, {'resides_in_russia': True}, {'is_student': True}):
-            self.assertEqual(self.client.post(self.url, data).status_code, 400)
-        self.assertFalse(TournamentApplication.objects.exists())
+        response = self.client.get(self.url)
+        self.assertNotContains(response, 'name="resides_in_russia"')
+        self.assertNotContains(response, 'name="is_student"')
+        self.assertRedirects(self.client.post(self.url, {}), self.url)
+        TournamentApplication.objects.filter(user=self.user).delete()
         self.user.discord = ''
         self.user.save()
         self.assertEqual(self.client.post(self.url, {'resides_in_russia': True, 'is_student': True}).status_code, 400)
